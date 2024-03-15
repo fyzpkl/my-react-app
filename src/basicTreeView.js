@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TreeView, TreeItem } from '@mui/lab';
+import { TreeView, TreeItem } from '@mui/x-tree-view'; // Updated import statement
 
 function BasicTreeView() {
   const [treeData, setTreeData] = useState(null);
