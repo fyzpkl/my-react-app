@@ -24,7 +24,7 @@ function App() {
       return () => window.removeEventListener('message', handleMessage);
   }, []);
 
-    return (
+      return (
         <div>
             {/* Your component UI */}
             {recordId && <div>Received Record ID: {recordId}</div>}
