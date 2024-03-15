@@ -6,20 +6,13 @@ function BasicTreeView() {
 
   useEffect(() => {
     const handleMessage = (event) => {
-      console.log('Received message:', event);
-      console.log('Data:', event.data);
-      console.log('Source:', event.data.source);
-
       if (event.origin !== "https://enterprise-force-7539--partialsb.sandbox.lightning.force.com") {
         console.log('Invalid origin:', event.origin);
-        // Validate the message origin
         return;
       }
 
       if (event.data && event.data.source === 'SalesforceLWC') {
-        console.log('Received Salesforce LWC message:', event.data.treeData);
         setTreeData(event.data.treeData);
-        // Additional logic for handling the received tree data
       }
     };
 
@@ -27,9 +20,11 @@ function BasicTreeView() {
     return () => window.removeEventListener('message', handleMessage);
   }, []);
 
-  console.log('Received Tree Data:', treeData);
-
   const renderTreeItems = (nodes) => {
+    if (!nodes || nodes.length === 0) {
+      return null;
+    }
+
     return nodes.map((node) => (
       <TreeItem key={node.id} nodeId={node.id} label={node.label}>
         {node.children && node.children.length > 0 && renderTreeItems(node.children)}
