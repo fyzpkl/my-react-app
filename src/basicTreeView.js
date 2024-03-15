@@ -35,32 +35,55 @@ const Tree = ({ data }) => {
 
 // Sample data
 function App() {
-    const [treeData, setTreeData] = useState([]);
-  
-    useEffect(() => {
-      // Function to handle messages from the LWC
+  const [recordId, setRecordId] = useState('');
+  const [treeData, setTreeData] = useState([]);
+
+  const handleFetchData = () => {
+      // Logic to fetch tree data using recordId
+      // This could be an API call or another method to fetch data
+      // For example, you might want to send a message to the LWC with the recordId
+      console.log("Fetching data for record ID:", recordId);
+
+      // Sample implementation (replace this with actual data fetching)
+      fetchTreeData(recordId);
+  };
+
+  const fetchTreeData = (id) => {
+      // Placeholder: Fetch tree data based on recordId
+      // Replace with actual fetching logic
+      setTreeData([
+          // ... Sample data structure based on fetched data ...
+      ]);
+  };
+
+  useEffect(() => {
+      // This effect could be for handling responses or other actions
+      // If you are expecting a message from LWC, you can handle it here
+
       const handleMessage = (event) => {
-        // Perform origin and/or other security checks here
-  
-        // Check if the message has the expected format and source
-        if (event.data && event.data.source === 'SalesforceLWC') {
-          setTreeData(event.data.treeData);
-        }
+          // Handle message
+          if (event.data && event.data.source === 'SalesforceLWC') {
+              setTreeData(event.data.treeData);
+          }
       };
-  
-      // Add event listener for messages from the parent window
+
       window.addEventListener('message', handleMessage);
-  
-      // Send a message to LWC to request data
-      window.parent.postMessage({ request: 'fetchTreeData' }, '*'); // Replace '*' with Salesforce origin for security
-  
-      return () => {
-        // Clean up the event listener
-        window.removeEventListener('message', handleMessage);
-      };
-    }, []);
-  
-    return <Tree data={treeData} />;
-  }
-  
-  export default App;
+      return () => window.removeEventListener('message', handleMessage);
+  }, []);
+
+  return (
+      <div>
+          <input 
+              type="text" 
+              value={recordId} 
+              onChange={(e) => setRecordId(e.target.value)} 
+              placeholder="Enter Record ID"
+          />
+          <button onClick={handleFetchData}>Fetch Data</button>
+
+          <Tree data={treeData} />
+      </div>
+  );
+}
+
+export default App;

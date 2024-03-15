@@ -3,9 +3,16 @@ import BasicTreeView from './basicTreeView'; // Update the import to your BasicT
 
 function App() {
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>My React Tree View</h1>
-      <BasicTreeView/>
+    <div>
+        <input 
+            type="text" 
+            value={recordId} 
+            onChange={(e) => setRecordId(e.target.value)} 
+            placeholder="Enter Record ID" 
+        />
+        <button onClick={handleFetchData}>Fetch Data</button>
+
+        <Tree data={treeData} />
     </div>
   );
 }
