@@ -22,6 +22,8 @@ function BasicTreeView() {
   }, []);
 
   const renderTreeItems = (nodes) => {
+    if (!nodes) return null;
+
     return nodes.map((node) => (
       <TreeItem key={node.data.Id} nodeId={node.data.Id} label={node.data.Name}>
         {node.children && node.children.length > 0 && renderTreeItems(node.children)}
