@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 function BasicTreeView() {
-  const [receivedMessage, setReceivedMessage] = useState('');
+  const [groupIds, setGroupIds] = useState([]);
 
   useEffect(() => {
     const handleMessage = (event) => {
@@ -16,8 +16,8 @@ function BasicTreeView() {
       }
 
       if (event.data && event.data.source === 'SalesforceLWC') {
-        console.log('Received Salesforce LWC message:', event.data.recordId);
-        setReceivedMessage(event.data.recordId);
+        console.log('Received Salesforce LWC message:', event.data.groupIds);
+        setGroupIds(event.data.groupIds);
         // Additional logic for handling the received message
       }
     };
@@ -26,12 +26,21 @@ function BasicTreeView() {
     return () => window.removeEventListener('message', handleMessage);
   }, []);
 
-  console.log('Received Message:', receivedMessage);
+  console.log('Received Group IDs:', groupIds);
 
   return (
     <div>
-      {/* Render the received message */}
-      {receivedMessage && <div>Received Message: {receivedMessage}</div>}
+      {/* Render the received group IDs */}
+      {groupIds.length > 0 && (
+        <div>
+          <h2>Group IDs:</h2>
+          <ul>
+            {groupIds.map(groupId => (
+              <li key={groupId}>{groupId}</li>
+            ))}
+          </ul>
+        </div>
+      )}
       {/* Additional UI elements */}
     </div>
   );
