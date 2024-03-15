@@ -14,6 +14,7 @@ function BasicTreeView() {
 
       if (event.data && event.data.source === 'SalesforceLWC') {
         setTreeData(event.data.treeData);
+        console.log('TreeData' + event.data.treeData);
       }
     };
 
