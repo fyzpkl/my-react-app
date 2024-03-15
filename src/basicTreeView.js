@@ -9,7 +9,7 @@ function BasicTreeView() {
       console.log('Data:', event.data);
       console.log('Source:', event.data.source);
 
-      if (event.origin !== "https://enterprise-force-7539--partialsb.sandbox.my.salesforce.com/services/apexrest/") {
+      if (event.origin !== "https://enterprise-force-7539--partialsb.sandbox.lightning.force.com") {
         console.log('Invalid origin:', event.origin);
         // Validate the message origin
         return;
