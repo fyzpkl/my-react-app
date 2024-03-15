@@ -37,24 +37,28 @@ const Tree = ({ data }) => {
 function App() {
   const [recordId, setRecordId] = useState('');
   const [treeData, setTreeData] = useState([]);
+  const [selectedRecordId, setSelectedRecordId] = useState('');
 
   const handleFetchData = () => {
-      // Logic to fetch tree data using recordId
-      // This could be an API call or another method to fetch data
-      // For example, you might want to send a message to the LWC with the recordId
-      console.log("Fetching data for record ID:", recordId);
-
-      // Sample implementation (replace this with actual data fetching)
-      fetchTreeData(recordId);
-  };
+    console.log("Fetching data for record ID:", recordId);
+    setSelectedRecordId(recordId); // Update the selectedRecordId state
+    fetchTreeData(recordId);
+};
 
   const fetchTreeData = (id) => {
-      // Placeholder: Fetch tree data based on recordId
-      // Replace with actual fetching logic
-      setTreeData([
-          // ... Sample data structure based on fetched data ...
-      ]);
-  };
+    // Example: Fetching data from an API endpoint
+    const apiUrl = `https://your-api-endpoint.com/data/${id}`; // Replace with your actual API URL
+
+    fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            setTreeData(data); // Assuming the API returns the data in the correct format
+        })
+        .catch(error => {
+            console.error('Error fetching tree data:', error);
+            // Handle any errors here, such as setting an error message in your state
+        });
+};
 
   useEffect(() => {
       // This effect could be for handling responses or other actions
@@ -72,16 +76,18 @@ function App() {
   }, []);
 
   return (
-      <div>
-          <input 
-              type="text" 
-              value={recordId} 
-              onChange={(e) => setRecordId(e.target.value)} 
-              placeholder="Enter Record ID"
-          />
-          <button onClick={handleFetchData}>Fetch Data</button>
+    <div>
+      <input 
+          type="text" 
+          value={recordId} 
+          onChange={(e) => setRecordId(e.target.value)} 
+          placeholder="Enter Record ID"
+      />
+        <button onClick={handleFetchData}>Fetch Data</button>
 
-          <Tree data={treeData} />
+        {selectedRecordId && <div>Selected Record ID: {selectedRecordId}</div>}
+
+        <Tree data={treeData} />
       </div>
   );
 }
