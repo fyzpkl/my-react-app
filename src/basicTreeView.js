@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { TreeView, TreeItem } from '@mui/lab';
 
 function BasicTreeView() {
-  const [groupIds, setGroupIds] = useState([]);
+  const [treeData, setTreeData] = useState([]);
 
   useEffect(() => {
     const handleMessage = (event) => {
@@ -17,9 +17,9 @@ function BasicTreeView() {
       }
 
       if (event.data && event.data.source === 'SalesforceLWC') {
-        console.log('Received Salesforce LWC message:', event.data.groupIds);
-        setGroupIds(event.data.groupIds);
-        // Additional logic for handling the received message
+        console.log('Received Salesforce LWC message:', event.data.treeData);
+        setTreeData(event.data.treeData);
+        // Additional logic for handling the received tree data
       }
     };
 
@@ -27,18 +27,24 @@ function BasicTreeView() {
     return () => window.removeEventListener('message', handleMessage);
   }, []);
 
-  console.log('Received Group IDs:', groupIds);
+  console.log('Received Tree Data:', treeData);
+
+  const renderTreeItems = (nodes) => {
+    return nodes.map((node) => (
+      <TreeItem key={node.id} nodeId={node.id} label={node.label}>
+        {node.children && node.children.length > 0 && renderTreeItems(node.children)}
+      </TreeItem>
+    ));
+  };
 
   return (
     <div>
-      {/* Render the received group IDs */}
-      {groupIds.length > 0 && (
+      {/* Render the received tree data */}
+      {treeData.length > 0 && (
         <div>
-          <h2>Group IDs:</h2>
+          <h2>Tree Data:</h2>
           <TreeView>
-            {groupIds.map(groupId => (
-              <TreeItem key={groupId} nodeId={groupId} label={groupId} />
-            ))}
+            {renderTreeItems(treeData)}
           </TreeView>
         </div>
       )}
