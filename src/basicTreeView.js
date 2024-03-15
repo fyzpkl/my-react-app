@@ -4,23 +4,25 @@ function App() {
     const [recordId, setRecordId] = useState('');
 
     useEffect(() => {
-        const handleMessage = (event) => {
-          console.log('use Effect');
-          console.log('Event'+ event.data);
-            if (event.origin !== "https://enterprise-force-7539--partialsb.sandbox.my.salesforce.com/services/apexrest/") {
-                // Validate the message origin
-                return;
-            }
-
-            if (event.data && event.data.source === 'SalesforceLWC') {
-                setRecordId(event.data.recordId);
-                // Additional logic for handling the recordId
-            }
-        };
-
-        window.addEventListener('message', handleMessage);
-        return () => window.removeEventListener('message', handleMessage);
-    }, []);
+      const handleMessage = (event) => {
+          console.log('Received message:', event);
+          console.log('Data:', event.data);
+          console.log('Source:', event.data.source);
+  
+          if (event.origin !== "https://enterprise-force-7539--partialsb.sandbox.my.salesforce.com/services/apexrest/") {
+              // Validate the message origin
+              return;
+          }
+  
+          if (event.data && event.data.source === 'SalesforceLWC') {
+              setRecordId(event.data.recordId);
+              // Additional logic for handling the recordId
+          }
+      };
+  
+      window.addEventListener('message', handleMessage);
+      return () => window.removeEventListener('message', handleMessage);
+  }, []);
 
     return (
         <div>
