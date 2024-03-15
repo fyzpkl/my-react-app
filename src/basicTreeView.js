@@ -5,7 +5,7 @@ function App() {
 
     useEffect(() => {
         const handleMessage = (event) => {
-            if (event.origin !== "https://your-salesforce-instance-url.com") {
+            if (event.origin !== "https://enterprise-force-7539--partialsb.sandbox.my.salesforce.com/services/apexrest/") {
                 // Validate the message origin
                 return;
             }
