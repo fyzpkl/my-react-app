@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { TreeView, TreeItem } from '@mui/lab';
 
 function BasicTreeView() {
-  const [treeData, setTreeData] = useState([]);
+  const [treeData, setTreeData] = useState(null);
 
   useEffect(() => {
     const handleMessage = (event) => {
       if (event.origin !== "https://enterprise-force-7539--partialsb.sandbox.lightning.force.com") {
         console.log('Invalid origin:', event.origin);
+        // Validate the message origin
         return;
       }
 
@@ -21,12 +22,8 @@ function BasicTreeView() {
   }, []);
 
   const renderTreeItems = (nodes) => {
-    if (!nodes || nodes.length === 0) {
-      return null;
-    }
-
     return nodes.map((node) => (
-      <TreeItem key={node.id} nodeId={node.id} label={node.label}>
+      <TreeItem key={node.data.Id} nodeId={node.data.Id} label={node.data.Name}>
         {node.children && node.children.length > 0 && renderTreeItems(node.children)}
       </TreeItem>
     ));
@@ -34,16 +31,15 @@ function BasicTreeView() {
 
   return (
     <div>
-      {/* Render the received tree data */}
-      {treeData.length > 0 && (
+      {/* Render the tree data */}
+      {treeData && (
         <div>
           <h2>Tree Data:</h2>
           <TreeView>
-            {renderTreeItems(treeData)}
+            {renderTreeItems(treeData.children)}
           </TreeView>
         </div>
       )}
-      {/* Additional UI elements */}
     </div>
   );
 }
