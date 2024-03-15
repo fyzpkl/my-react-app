@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { TreeView, TreeItem } from '@mui/lab';
 
 function BasicTreeView() {
   const [groupIds, setGroupIds] = useState([]);
@@ -34,11 +35,11 @@ function BasicTreeView() {
       {groupIds.length > 0 && (
         <div>
           <h2>Group IDs:</h2>
-          <ul>
+          <TreeView>
             {groupIds.map(groupId => (
-              <li key={groupId}>{groupId}</li>
+              <TreeItem key={groupId} nodeId={groupId} label={groupId} />
             ))}
-          </ul>
+          </TreeView>
         </div>
       )}
       {/* Additional UI elements */}
