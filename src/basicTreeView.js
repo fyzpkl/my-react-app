@@ -1,41 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { TreeView, TreeItem } from '@mui/x-tree-view';
 
-function BasicTreeView() {
-  const [treeData, setTreeData] = useState(null);
-
-  useEffect(() => {
-    const handleMessage = (event) => {
-      if (event.origin !== "https://enterprise-force-7539--partialsb.sandbox.lightning.force.com") {
-        console.log('Invalid origin:', event.origin);
-        return;
-      }
-
-      if (event.data && event.data.source === 'SalesforceLWC') {
-        const data = typeof event.data.treeData === 'string' ? JSON.parse(event.data.treeData) : event.data.treeData;
-        setTreeData(data);
-        console.log('Parsed Tree Data:', data);
-      }
-    };
-
-    // Move the event listener addition outside of the handleMessage function
-    window.addEventListener('message', handleMessage);
-
-    // Cleanup event listener
-    return () => {
-      window.removeEventListener('message', handleMessage);
-    };
-  }, []);
-
+function BasicTreeView({ treeData }) {
   const renderTreeItems = (nodes, path = '') => {
-    console.log('Rendering nodes:', nodes); // Debugging
-  
     if (!nodes) return null;
   
     return nodes.map((node, index) => {
       const nodeId = path ? `${path}-${index}` : `${index}`;
-      console.log('Node:', node, 'NodeId:', nodeId); // Debugging
-  
       return (
         <TreeItem key={nodeId} nodeId={nodeId} label={node.name}>
           {Array.isArray(node.children) && renderTreeItems(node.children, nodeId)}
@@ -44,16 +15,12 @@ function BasicTreeView() {
     });
   };
   
-  
-
-  console.log('Current Tree Data:', treeData); // Debugging
-
   return (
     <div style={{ width: '100%', height: 'auto' }}> 
       {treeData ? (
         <div>
           <h2>Tree Data:</h2>
-          <TreeView > 
+          <TreeView> 
             {renderTreeItems(treeData.children)}
           </TreeView>
         </div>
@@ -62,7 +29,6 @@ function BasicTreeView() {
       )}
     </div>
   );
-  
 }
 
 export default BasicTreeView;
