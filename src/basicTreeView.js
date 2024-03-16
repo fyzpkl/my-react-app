@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TreeView, TreeItem } from '@mui/x-tree-view'; // Updated import statement
+import { TreeView, TreeItem } from '@mui/x-tree-view';
 
 function BasicTreeView() {
   const [treeData, setTreeData] = useState(null);
@@ -8,13 +8,12 @@ function BasicTreeView() {
     const handleMessage = (event) => {
       if (event.origin !== "https://enterprise-force-7539--partialsb.sandbox.lightning.force.com") {
         console.log('Invalid origin:', event.origin);
-        // Validate the message origin
         return;
       }
 
       if (event.data && event.data.source === 'SalesforceLWC') {
         setTreeData(event.data.treeData);
-        console.log('TreeData' + event.data.treeData);
+        console.log('Received TreeData:', event.data.treeData);
       }
     };
 
@@ -27,21 +26,24 @@ function BasicTreeView() {
 
     return nodes.map((node) => (
       <TreeItem key={node.data.Id} nodeId={node.data.Id} label={node.data.Name}>
-        {node.children && node.children.length > 0 && renderTreeItems(node.children)}
+        {Array.isArray(node.children) && renderTreeItems(node.children)}
       </TreeItem>
     ));
   };
 
+  console.log('Current Tree Data:', treeData); // Debugging
+
   return (
     <div>
-      {/* Render the tree data */}
-      {treeData && (
+      {treeData ? (
         <div>
           <h2>Tree Data:</h2>
           <TreeView>
             {renderTreeItems(treeData.children)}
           </TreeView>
         </div>
+      ) : (
+        <p>Loading tree data...</p>
       )}
     </div>
   );
