@@ -40,11 +40,11 @@ function BasicTreeView() {
   console.log('Current Tree Data:', treeData); // Debugging
 
   return (
-    <div>
+    <div style={{ width: '100%', height: 'auto' }}> {/* Adjust the width and height as needed */}
       {treeData ? (
         <div>
           <h2>Tree Data:</h2>
-          <TreeView>
+          <TreeView style={{ width: '100%', maxHeight: '500px', overflowY: 'auto' }}> {/* Additional styling for TreeView */}
             {renderTreeItems(treeData.children)}
           </TreeView>
         </div>
@@ -53,6 +53,7 @@ function BasicTreeView() {
       )}
     </div>
   );
+  
 }
 
 export default BasicTreeView;
