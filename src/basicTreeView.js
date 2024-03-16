@@ -1,17 +1,8 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import SortableTree from 'react-sortable-tree';
-import 'react-sortable-tree/style.css';
+import React, { useEffect, useState } from 'react';
+import { TreeView, TreeItem } from '@mui/x-tree-view';
 
 function BasicTreeView() {
-  const [treeData, setTreeData] = useState([]);
-
-  // Convert your tree data to the format required by react-sortable-tree
-  const convertToSortableTreeFormat = useCallback((nodes) => {
-    return nodes.map(node => ({
-      title: node.name,
-      children: convertToSortableTreeFormat(node.children || [])
-    }));
-  }, []);
+  const [treeData, setTreeData] = useState(null);
 
   useEffect(() => {
     const handleMessage = (event) => {
@@ -22,21 +13,44 @@ function BasicTreeView() {
 
       if (event.data && event.data.source === 'SalesforceLWC') {
         const data = typeof event.data.treeData === 'string' ? JSON.parse(event.data.treeData) : event.data.treeData;
-        setTreeData(convertToSortableTreeFormat(data.children));
+        setTreeData(data);
+        console.log('Parsed Tree Data:', data);
       }
     };
 
+    // Move the event listener addition outside of the handleMessage function
     window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
-  }, [convertToSortableTreeFormat]);
+
+    // Cleanup event listener
+    return () => {
+      window.removeEventListener('message', handleMessage);
+    };
+  }, []);
+
+  const renderTreeItems = (nodes) => {
+    if (!nodes) return null;
+
+    return nodes.map((node, index) => (
+      <TreeItem key={index} nodeId={String(index)} label={node.name}>
+        {Array.isArray(node.children) && renderTreeItems(node.children)}
+      </TreeItem>
+    ));
+  };
+
+  console.log('Current Tree Data:', treeData); // Debugging
 
   return (
-    <div style={{ height: 400 }}>
-      <h2>Tree Data:</h2>
-      <SortableTree
-        treeData={treeData}
-        onChange={newTreeData => setTreeData(newTreeData)}
-      />
+    <div>
+      {treeData ? (
+        <div>
+          <h2>Tree Data:</h2>
+          <TreeView>
+            {renderTreeItems(treeData.children)}
+          </TreeView>
+        </div>
+      ) : (
+        <p>Loading tree data...</p>
+      )}
     </div>
   );
 }
