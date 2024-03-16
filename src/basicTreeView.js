@@ -14,7 +14,7 @@ function BasicTreeView({ treeData }) {
       );
     });
   };
-  
+  console.log('Current Tree Data State:', treeData);
   return (
 <div style={{ width: '100%', height: 'auto' }}> 
       {treeData ? (
