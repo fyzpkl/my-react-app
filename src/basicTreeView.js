@@ -1,9 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import SortableTree from 'react-sortable-tree';
-import 'react-sortable-tree/style.css'; // This only needs to be imported once in your app
+import 'react-sortable-tree/style.css'; // Import the styles for react-sortable-tree
 
 function BasicTreeView() {
   const [treeData, setTreeData] = useState([]);
+
+  // Function to convert your tree data to the format required by react-sortable-tree
+  const convertToSortableTreeFormat = useCallback((nodes) => {
+    return nodes.map(node => ({
+      title: node.name,
+      children: convertToSortableTreeFormat(node.children || [])
+    }));
+  }, []);
 
   useEffect(() => {
     const handleMessage = (event) => {
@@ -20,16 +28,11 @@ function BasicTreeView() {
     };
 
     window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
-  }, []);
 
-  // Convert your data format to the format required by react-sortable-tree
-  const convertToSortableTreeFormat = (nodes) => {
-    return nodes.map(node => ({
-      title: node.name,
-      children: convertToSortableTreeFormat(node.children || [])
-    }));
-  };
+    return () => {
+      window.removeEventListener('message', handleMessage);
+    };
+  }, [convertToSortableTreeFormat]);
 
   return (
     <div style={{ height: 400 }}>
