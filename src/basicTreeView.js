@@ -23,13 +23,14 @@ function BasicTreeView() {
 
   const renderTreeItems = (nodes) => {
     if (!nodes) return null;
-
-    return nodes.map((node) => (
-      <TreeItem key={node.data.Id} nodeId={node.data.Id} label={node.data.Name}>
+  
+    return nodes.map((node, index) => (
+      <TreeItem key={index} nodeId={String(index)} label={node.name}>
         {Array.isArray(node.children) && renderTreeItems(node.children)}
       </TreeItem>
     ));
   };
+  
 
   console.log('Current Tree Data:', treeData); // Debugging
 
