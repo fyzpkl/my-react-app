@@ -28,10 +28,14 @@ function BasicTreeView() {
   }, []);
 
   const renderTreeItems = (nodes, path = '') => {
+    console.log('Rendering nodes:', nodes); // Debugging
+  
     if (!nodes) return null;
   
     return nodes.map((node, index) => {
       const nodeId = path ? `${path}-${index}` : `${index}`;
+      console.log('Node:', node, 'NodeId:', nodeId); // Debugging
+  
       return (
         <TreeItem key={nodeId} nodeId={nodeId} label={node.name}>
           {Array.isArray(node.children) && renderTreeItems(node.children, nodeId)}
@@ -40,15 +44,16 @@ function BasicTreeView() {
     });
   };
   
+  
 
   console.log('Current Tree Data:', treeData); // Debugging
 
   return (
-    <div style={{ width: '100%', height: 'auto' }}> {/* Adjust the width and height as needed */}
+    <div style={{ width: '100%', height: 'auto' }}> 
       {treeData ? (
         <div>
           <h2>Tree Data:</h2>
-          <TreeView style={{ width: '100%', maxHeight: '500px', overflowY: 'auto' }}> {/* Additional styling for TreeView */}
+          <TreeView > 
             {renderTreeItems(treeData.children)}
           </TreeView>
         </div>
