@@ -12,25 +12,30 @@ function BasicTreeView() {
       }
 
       if (event.data && event.data.source === 'SalesforceLWC') {
-        setTreeData(event.data.treeData);
-        console.log('Received TreeData:', event.data.treeData);
+        const data = typeof event.data.treeData === 'string' ? JSON.parse(event.data.treeData) : event.data.treeData;
+        setTreeData(data);
+        console.log('Parsed Tree Data:', data);
       }
     };
 
+    // Move the event listener addition outside of the handleMessage function
     window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
+
+    // Cleanup event listener
+    return () => {
+      window.removeEventListener('message', handleMessage);
+    };
   }, []);
 
   const renderTreeItems = (nodes) => {
     if (!nodes) return null;
-  
+
     return nodes.map((node, index) => (
       <TreeItem key={index} nodeId={String(index)} label={node.name}>
         {Array.isArray(node.children) && renderTreeItems(node.children)}
       </TreeItem>
     ));
   };
-  
 
   console.log('Current Tree Data:', treeData); // Debugging
 
