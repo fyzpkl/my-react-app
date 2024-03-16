@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { TreeView, TreeItem } from '@mui/x-tree-view';
+import SortableTree from 'react-sortable-tree';
+import 'react-sortable-tree/style.css'; // This only needs to be imported once in your app
 
 function BasicTreeView() {
-  const [treeData, setTreeData] = useState(null);
+  const [treeData, setTreeData] = useState([]);
 
   useEffect(() => {
     const handleMessage = (event) => {
@@ -13,44 +14,30 @@ function BasicTreeView() {
 
       if (event.data && event.data.source === 'SalesforceLWC') {
         const data = typeof event.data.treeData === 'string' ? JSON.parse(event.data.treeData) : event.data.treeData;
-        setTreeData(data);
+        setTreeData(convertToSortableTreeFormat(data.children));
         console.log('Parsed Tree Data:', data);
       }
     };
 
-    // Move the event listener addition outside of the handleMessage function
     window.addEventListener('message', handleMessage);
-
-    // Cleanup event listener
-    return () => {
-      window.removeEventListener('message', handleMessage);
-    };
+    return () => window.removeEventListener('message', handleMessage);
   }, []);
 
-  const renderTreeItems = (nodes) => {
-    if (!nodes) return null;
-
-    return nodes.map((node, index) => (
-      <TreeItem key={index} nodeId={String(index)} label={node.name}>
-        {Array.isArray(node.children) && renderTreeItems(node.children)}
-      </TreeItem>
-    ));
+  // Convert your data format to the format required by react-sortable-tree
+  const convertToSortableTreeFormat = (nodes) => {
+    return nodes.map(node => ({
+      title: node.name,
+      children: convertToSortableTreeFormat(node.children || [])
+    }));
   };
 
-  console.log('Current Tree Data:', treeData); // Debugging
-
   return (
-    <div>
-      {treeData ? (
-        <div>
-          <h2>Tree Data:</h2>
-          <TreeView>
-            {renderTreeItems(treeData.children)}
-          </TreeView>
-        </div>
-      ) : (
-        <p>Loading tree data...</p>
-      )}
+    <div style={{ height: 400 }}>
+      <h2>Tree Data:</h2>
+      <SortableTree
+        treeData={treeData}
+        onChange={newTreeData => setTreeData(newTreeData)}
+      />
     </div>
   );
 }
