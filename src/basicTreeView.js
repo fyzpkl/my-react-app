@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import SortableTree from 'react-sortable-tree';
-import 'react-sortable-tree/style.css'; // Import the styles for react-sortable-tree
+import 'react-sortable-tree/style.css';
 
 function BasicTreeView() {
   const [treeData, setTreeData] = useState([]);
 
-  // Function to convert your tree data to the format required by react-sortable-tree
+  // Convert your tree data to the format required by react-sortable-tree
   const convertToSortableTreeFormat = useCallback((nodes) => {
     return nodes.map(node => ({
       title: node.name,
@@ -23,15 +23,11 @@ function BasicTreeView() {
       if (event.data && event.data.source === 'SalesforceLWC') {
         const data = typeof event.data.treeData === 'string' ? JSON.parse(event.data.treeData) : event.data.treeData;
         setTreeData(convertToSortableTreeFormat(data.children));
-        console.log('Parsed Tree Data:', data);
       }
     };
 
     window.addEventListener('message', handleMessage);
-
-    return () => {
-      window.removeEventListener('message', handleMessage);
-    };
+    return () => window.removeEventListener('message', handleMessage);
   }, [convertToSortableTreeFormat]);
 
   return (
