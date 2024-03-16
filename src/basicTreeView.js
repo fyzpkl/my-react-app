@@ -16,7 +16,7 @@ function BasicTreeView({ treeData }) {
   };
   
   return (
-    <div style={{ width: '100%', height: 'auto' }}> 
+<div style={{ width: '100%', height: 'auto' }}> 
       {treeData ? (
         <div>
           <h2>Tree Data:</h2>
