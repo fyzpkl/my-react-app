@@ -6,7 +6,7 @@ function TreesGridView() {
   const [treeDatas, setTreeDatas] = useState([]);
 
   useEffect(() => {
-    
+    console.log("Use Effect working/");
     const handleMessage = (event) => {
       console.log("Message received:", event);
       if (event.origin !== "https://enterprise-force-7539--partialsb.sandbox.lightning.force.com") {
