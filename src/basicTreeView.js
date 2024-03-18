@@ -27,15 +27,19 @@ function BasicTreeView() {
     };
   }, []);
 
-  const renderTreeItems = (nodes) => {
+  const renderTreeItems = (nodes, path = '') => {
     if (!nodes) return null;
-
-    return nodes.map((node, index) => (
-      <TreeItem key={index} nodeId={String(index)} label={node.name}>
-        {Array.isArray(node.children) && renderTreeItems(node.children)}
-      </TreeItem>
-    ));
+  
+    return nodes.map((node, index) => {
+      const nodeId = `${path}-${node.name}-${index}`;
+      return (
+        <TreeItem key={nodeId} nodeId={nodeId} label={node.name || 'Unnamed Node'}>
+          {Array.isArray(node.children) ? renderTreeItems(node.children, nodeId) : null}
+        </TreeItem>
+      );
+    });
   };
+  
 
   console.log('Current Tree Data:', treeData); // Debugging
 
