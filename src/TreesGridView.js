@@ -15,6 +15,7 @@ function TreesGridView() {
       if (event.data && event.data.source === 'SalesforceLWC') {
         const data = typeof event.data.treeData === 'string' ? JSON.parse(event.data.treeData) : event.data.treeData;
         setTreeDatas(prevDatas => [...prevDatas, data]);
+        console.log('event.data:', event.data);
       }
     };
 
