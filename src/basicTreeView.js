@@ -41,9 +41,9 @@ function BasicTreeView() {
     const objectUrl = `${salesforceInstance}lightning/r/Submission_Group__c/${submissionId}/view`;
     window.open(objectUrl, '_blank');
   };
-  const handleShowChildren = (nodeId) => {
-    // Logic to toggle visibility of children or navigate to child node
-    console.log('Show children for node:', nodeId);
+  const toggleChildrenVisibility = (node) => {
+    node.isExpanded = !node.isExpanded; // Toggle the isExpanded property
+    setTreeData({ ...treeData }); // Trigger a state update to re-render
   };
 
   // 15. Function to render grid items
@@ -54,16 +54,23 @@ function BasicTreeView() {
         {nodes.map((node, index) => {
           const nodeId = `${path}-${node.name}-${index}`;
           return (
-            <div key={nodeId} style={{ padding: '10px', border: '1px solid #ddd', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div onClick={() => handleShowChildren(nodeId)} style={{ cursor: 'pointer' }}>
-                {node.name || 'Unnamed Node'}
+            <React.Fragment key={nodeId}>
+              <div style={{ padding: '10px', border: '1px solid #ddd', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div onClick={() => toggleChildrenVisibility(node)} style={{ cursor: 'pointer' }}>
+                  {node.name || 'Unnamed Node'}
+                </div>
+                {node.submissionId && (
+                  <div onClick={() => handleNodeClick(node.submissionId)} style={{ cursor: 'pointer', fontSize: 'smaller' }}>
+                    ID: {node.submissionId}
+                  </div>
+                )}
               </div>
-              {node.submissionId && (
-                <div onClick={() => handleNodeClick(node.submissionId)} style={{ cursor: 'pointer', fontSize: 'smaller' }}>
-                  ID: {node.submissionId}
+              {node.isExpanded && (
+                <div style={{ marginLeft: '20px' }}>
+                  {renderGridItems(node.children, nodeId)}
                 </div>
               )}
-            </div>
+            </React.Fragment>
           );
         })}
       </div>
