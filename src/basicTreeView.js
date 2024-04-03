@@ -37,24 +37,35 @@ function BasicTreeView() {
 
   // 12. Function to handle node (grid item) click
   const handleNodeClick = (submissionId) => {
-    // 13. Construct URL to the Salesforce object
-    const objectUrl = `${salesforceInstance}/${submissionId}`;
-    // 14. Open the Salesforce object URL in a new browser tab
+    // Open the Salesforce record in a new window
+    const objectUrl = `${salesforceInstance}lightning/r/Submission_Group__c/${submissionId}/view`;
     window.open(objectUrl, '_blank');
+  };
+  const handleShowChildren = (nodeId) => {
+    // Logic to toggle visibility of children or navigate to child node
+    console.log('Show children for node:', nodeId);
   };
 
   // 15. Function to render grid items
-  const renderGridItems = (nodes) => {
+  const renderGridItems = (nodes, path = '') => {
     if (!nodes) return null;
     return (
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
-        {nodes.map((node, index) => (
-          <div key={index} style={{ padding: '10px', border: '1px solid #ddd', cursor: 'pointer' }}
-               onClick={() => handleNodeClick(node.submissionId)}>
-            <div>{node.name || 'Unnamed Node'}</div>
-            <div>ID: {node.submissionId}</div>
-          </div>
-        ))}
+        {nodes.map((node, index) => {
+          const nodeId = `${path}-${node.name}-${index}`;
+          return (
+            <div key={nodeId} style={{ padding: '10px', border: '1px solid #ddd', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div onClick={() => handleShowChildren(nodeId)} style={{ cursor: 'pointer' }}>
+                {node.name || 'Unnamed Node'}
+              </div>
+              {node.submissionId && (
+                <div onClick={() => handleNodeClick(node.submissionId)} style={{ cursor: 'pointer', fontSize: 'smaller' }}>
+                  ID: {node.submissionId}
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
     );
   };
