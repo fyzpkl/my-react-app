@@ -47,34 +47,33 @@ function BasicTreeView() {
   };
 
   // 15. Function to render grid items
-  const renderGridItems = (nodes, path = '') => {
+  const renderGridItems = (nodes, level = 0) => {
     if (!nodes) return null;
-    return (
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
-        {nodes.map((node, index) => {
-          const nodeId = `${path}-${node.name}-${index}`;
-          return (
-            <React.Fragment key={nodeId}>
-              <div style={{ padding: '10px', border: '1px solid #ddd', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div onClick={() => toggleChildrenVisibility(node)} style={{ cursor: 'pointer' }}>
-                  {node.name || 'Unnamed Node'}
-                </div>
-                {node.submissionId && (
-                  <div onClick={() => handleNodeClick(node.submissionId)} style={{ cursor: 'pointer', fontSize: 'smaller' }}>
-                    ID: {node.submissionId}
-                  </div>
-                )}
+    return nodes.map((node, index) => {
+      const nodeId = `node-${index}`;
+      return (
+        <React.Fragment key={nodeId}>
+          <div style={{ 
+            padding: '10px', 
+            border: '1px solid #ddd', 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: 'center', 
+            marginLeft: `${level * 20}px`  // Indent child nodes
+          }}>
+            <div onClick={() => toggleChildrenVisibility(node)} style={{ cursor: 'pointer' }}>
+              {node.name || 'Unnamed Node'}
+            </div>
+            {node.submissionId && (
+              <div onClick={() => handleNodeClick(node.submissionId)} style={{ cursor: 'pointer', fontSize: 'smaller' }}>
+                ID: {node.submissionId}
               </div>
-              {node.isExpanded && (
-                <div style={{ marginLeft: '20px' }}>
-                  {renderGridItems(node.children, nodeId)}
-                </div>
-              )}
-            </React.Fragment>
-          );
-        })}
-      </div>
-    );
+            )}
+          </div>
+          {node.isExpanded && renderGridItems(node.children, level + 1)} {/* Render child nodes */}
+        </React.Fragment>
+      );
+    });
   };
 
   // 16. The component's return statement that renders the UI
