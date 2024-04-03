@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { TreeView, TreeItem } from '@mui/x-tree-view';
 
 function BasicTreeView() {
   const [treeData, setTreeData] = useState(null);
-  const [recordId, setRecordId] = useState(null);
 
   useEffect(() => {
     const handleMessage = (event) => {
-      if (event.origin !== "https://enterprise-force-7539--partialsb.sandbox.lightning.force.com") {
+      if (event.origin !== "https://your-allowed-origin.com") { // replace with your allowed origin
         console.log('Invalid origin:', event.origin);
         return;
       }
@@ -15,55 +13,43 @@ function BasicTreeView() {
       if (event.data && event.data.source === 'SalesforceLWC') {
         const data = typeof event.data.treeData === 'string' ? JSON.parse(event.data.treeData) : event.data.treeData;
         setTreeData(data);
-        setRecordId(event.data.recordId);
         console.log('Parsed Tree Data:', data);
-        console.log('Received Record ID:', event.data.recordId);
       }
     };
 
     window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
+
+    return () => {
+      window.removeEventListener('message', handleMessage);
+    };
   }, []);
 
   const handleNodeClick = (submissionId) => {
-    // This is where you define what happens when a node is clicked
-    console.log('Node clicked:', submissionId);
-    // For instance, you could navigate to a different page or perform some action
+    console.log('Navigate to submission with ID:', submissionId);
+    // Perform your navigation logic here, e.g., redirect to a different page
+    // window.location.href = `/submission/${submissionId}`;
+    // or using React Router: history.push(`/submission/${submissionId}`);
   };
 
-  const renderTreeItems = (nodes, path = '') => {
+  const renderGridItems = (nodes) => {
     if (!nodes) return null;
-    return nodes.map((node, index) => {
-      const nodeId = `${path}-${node.name}-${index}`;
-      return (
-        <TreeItem 
-          key={nodeId} 
-          nodeId={nodeId} 
-          label={
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-              <a href="#" onClick={() => handleNodeClick(node.submissionId)}>
-                {node.name || 'Unnamed Node'}
-              </a>
-              {node.submissionId && <span style={{ fontSize: 'smaller' }}>ID: {node.submissionId}</span>}
-            </div>
-          }>
-          {Array.isArray(node.children) ? renderTreeItems(node.children, nodeId) : null}
-        </TreeItem>
-      );
-    });
+    return (
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
+        {nodes.map((node, index) => (
+          <div key={index} style={{ padding: '10px', border: '1px solid #ddd', cursor: 'pointer' }}
+               onClick={() => handleNodeClick(node.submissionId)}>
+            <div>{node.name || 'Unnamed Node'}</div>
+            <div>ID: {node.submissionId}</div>
+          </div>
+        ))}
+      </div>
+    );
   };
 
   return (
     <div>
-      <h2>Tree View</h2>
-      {recordId && <p>Record ID: {recordId}</p>}
-      {treeData ? (
-        <TreeView>
-          {renderTreeItems(treeData.children)}
-        </TreeView>
-      ) : (
-        <p>Loading tree data...</p>
-      )}
+      <h2>Submissions Grid</h2>
+      {treeData ? renderGridItems(treeData.children) : <p>Loading submissions...</p>}
     </div>
   );
 }
