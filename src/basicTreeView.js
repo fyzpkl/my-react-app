@@ -61,9 +61,9 @@ function BasicTreeView() {
               {node.name || 'Unnamed Node'}
             </div>
             {/* Additional fields */}
-            {node.agency && (
-              <div style={{ flex: 1, padding: '10px', borderRight: '1px solid #ddd' }}>
-                Agency ID: {node.agency}
+            {node.agencyId && (
+              <div onClick={() => handleNodeClick(node.agencyId, 'Agency__c')} style={{ flex: 1, padding: '10px', borderRight: '1px solid #ddd', cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}>
+                {node.agencyName || 'No Agency'}
               </div>
             )}
             {/* More columns for each field */}
