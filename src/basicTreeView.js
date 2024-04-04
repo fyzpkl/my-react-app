@@ -4,6 +4,8 @@ function BasicTreeView() {
   const [treeData, setTreeData] = useState(null);
   const salesforceInstance = 'https://enterprise-force-7539--partialsb.sandbox.lightning.force.com/';
   const [selectedSubmissionGroupId, setSelectedSubmissionGroupId] = useState(null);
+  const [buttonClicked, setButtonClicked] = useState(false);
+
   useEffect(() => {
     const handleMessage = (event) => {
       if (event.origin !== "https://enterprise-force-7539--partialsb.sandbox.lightning.force.com") {
@@ -37,6 +39,7 @@ function BasicTreeView() {
 
   const handleRunSubmission = async (submissionGroupId) => {
     setIsSubmitting(true);
+    setButtonClicked(true); // Set to true on button click
     const requestBody = {
       "submission_group": submissionGroupId, // Dynamic ID
       "handled_by": "005Hp00000iLBIQIA4", // Hardcoded for now
@@ -148,12 +151,14 @@ function BasicTreeView() {
   };
   return (
     <div>
-      <h2>Submissions Grid</h2>
-      {treeData ? renderGridItems(treeData.children) : <p>Loading submissions...</p>}
-        <button onClick={() => handleRunSubmission(selectedSubmissionGroupId)} disabled={isSubmitting}>
-            {isSubmitting ? 'Running...' : 'Run Submission Group'}
-        </button>
-      {submissionResponse && <div>{submissionResponse}</div>}
+        <h2>Submissions Grid</h2>
+        {treeData ? renderGridItems(treeData.children) : <p>Loading submissions...</p>}
+        {!buttonClicked && (
+            <button onClick={() => handleRunSubmission(selectedSubmissionGroupId)} disabled={isSubmitting}>
+                {isSubmitting ? 'Running...' : 'Run Submission Group'}
+            </button>
+        )}
+        {submissionResponse && <div>{submissionResponse}</div>}
     </div>
   );
 }
