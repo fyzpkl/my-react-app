@@ -37,8 +37,7 @@ function BasicTreeView() {
 
   const handleRunSubmission = async (submissionGroupId) => {
     setIsSubmitting(true);
-    setButtonClicked(true);
-
+    
     const requestBody = {
       "submission_group": submissionGroupId,
       "handled_by": "005Hp00000iLBIQIA4",
@@ -58,6 +57,8 @@ function BasicTreeView() {
       alert('Error: Could not complete submission');
     } finally {
       setIsSubmitting(false);
+      setButtonClicked(true);
+
     }
   };
   const renderGridItems = (nodes, level = 0) => {
