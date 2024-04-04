@@ -6,7 +6,7 @@ function BasicTreeView() {
   const [selectedSubmissionGroupId, setSelectedSubmissionGroupId] = useState(null);
   const [buttonClicked, setButtonClicked] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const [apiResponse, setApiResponse] = useState(null);
   useEffect(() => {
     const handleMessage = (event) => {
       if (event.origin !== "https://enterprise-force-7539--partialsb.sandbox.lightning.force.com") {
@@ -51,10 +51,12 @@ function BasicTreeView() {
         body: JSON.stringify(requestBody)
       });
       const data = await response.json();
-      alert(data.message || data);
+      setApiResponse(JSON.stringify(data, null, 2));
+      alert(data.message || "Success");
     } catch (error) {
       console.error('Error running submission:', error);
       alert('Error: Could not complete submission');
+      setApiResponse('Error: Could not complete submission'); 
     } finally {
       setIsSubmitting(false);
       setButtonClicked(true);
@@ -152,6 +154,10 @@ function BasicTreeView() {
           {isSubmitting ? 'Running...' : 'Run Submission Group'}
         </button>
       )}
+      {apiResponse && <div>
+        <h3>API Response:</h3>
+        <pre>{apiResponse}</pre> {/* Display the response in a formatted manner */}
+      </div>}
     </div>
   );
 }
