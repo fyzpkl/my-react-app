@@ -5,6 +5,7 @@ function BasicTreeView() {
   const salesforceInstance = 'https://enterprise-force-7539--partialsb.sandbox.lightning.force.com/';
   const [selectedSubmissionGroupId, setSelectedSubmissionGroupId] = useState(null);
   const [buttonClicked, setButtonClicked] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const handleMessage = (event) => {
@@ -16,8 +17,7 @@ function BasicTreeView() {
       if (event.data && event.data.source === 'SalesforceLWC') {
         const data = typeof event.data.treeData === 'string' ? JSON.parse(event.data.treeData) : event.data.treeData;
         setTreeData(data);
-        const groupId = data.groupId; 
-        setSelectedSubmissionGroupId(groupId);
+        setSelectedSubmissionGroupId(data.groupId); // Assuming groupId is directly available in the data
       }
     };
 
@@ -34,37 +34,32 @@ function BasicTreeView() {
     node.isExpanded = !node.isExpanded;
     setTreeData({ ...treeData });
   };
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submissionResponse, setSubmissionResponse] = useState(null);
 
   const handleRunSubmission = async (submissionGroupId) => {
     setIsSubmitting(true);
-    setButtonClicked(true); // Set to true on button click
+    setButtonClicked(true);
+
     const requestBody = {
-      "submission_group": submissionGroupId, // Dynamic ID
-      "handled_by": "005Hp00000iLBIQIA4", // Hardcoded for now
-      "company_id": "001Dy000010kEjjIAE" // Hardcoded for now
+      "submission_group": submissionGroupId,
+      "handled_by": "005Hp00000iLBIQIA4",
+      "company_id": "001Dy000010kEjjIAE"
     };
 
     try {
       const response = await fetch('https://mk-be-0f3c24a58a9b.herokuapp.com/run_submission_group', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestBody)
       });
-
       const data = await response.json();
-      alert(data.message || 'Success'); // Simple alert, can be replaced with a modal for better UX
+      alert(data.message || 'Success');
     } catch (error) {
       console.error('Error running submission:', error);
-      alert('Error: Could not complete submission'); // Alert on error
+      alert('Error: Could not complete submission');
+    } finally {
+      setIsSubmitting(false);
     }
-    setIsSubmitting(false);
-    setButtonClicked(true); 
   };
-
   const renderGridItems = (nodes, level = 0) => {
     if (!nodes) return null;
 
@@ -149,14 +144,13 @@ function BasicTreeView() {
   };
   return (
     <div>
-        <h2>Submissions Grid</h2>
-        {treeData ? renderGridItems(treeData.children) : <p>Loading submissions...</p>}
-        {!buttonClicked && (
-            <button onClick={() => handleRunSubmission(selectedSubmissionGroupId)} disabled={isSubmitting}>
-                {isSubmitting ? 'Running...' : 'Run Submission Group'}
-            </button>
-        )}
-        {submissionResponse && <div>{submissionResponse}</div>}
+      <h2>Submissions Grid</h2>
+      {treeData ? renderGridItems(treeData.children) : <p>Loading submissions...</p>}
+      {!buttonClicked && (
+        <button onClick={() => handleRunSubmission(selectedSubmissionGroupId)} disabled={isSubmitting}>
+          {isSubmitting ? 'Running...' : 'Run Submission Group'}
+        </button>
+      )}
     </div>
   );
 }
