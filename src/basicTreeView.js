@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 function BasicTreeView() {
   const [treeData, setTreeData] = useState(null);
   const salesforceInstance = 'https://enterprise-force-7539--partialsb.sandbox.lightning.force.com/';
-
+  const [selectedSubmissionGroupId, setSelectedSubmissionGroupId] = useState(null);
   useEffect(() => {
     const handleMessage = (event) => {
       if (event.origin !== "https://enterprise-force-7539--partialsb.sandbox.lightning.force.com") {
@@ -14,6 +14,8 @@ function BasicTreeView() {
       if (event.data && event.data.source === 'SalesforceLWC') {
         const data = typeof event.data.treeData === 'string' ? JSON.parse(event.data.treeData) : event.data.treeData;
         setTreeData(data);
+        const groupId = data.groupId; 
+        setSelectedSubmissionGroupId(groupId);
       }
     };
 
@@ -29,6 +31,37 @@ function BasicTreeView() {
   const toggleChildrenVisibility = (node) => {
     node.isExpanded = !node.isExpanded;
     setTreeData({ ...treeData });
+  };
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submissionResponse, setSubmissionResponse] = useState(null);
+
+  const handleRunSubmission = async (submissionGroupId) => {
+    setIsSubmitting(true);
+    const requestBody = {
+      "submission_group": submissionGroupId, // Dynamic ID
+      "handled_by": "005Hp00000iLBIQIA4", // Hardcoded for now
+      "company_id": "001Dy000010kEjjIAE" // Hardcoded for now
+    };
+
+    try {
+      const response = await fetch('https://mk-be-0f3c24a58a9b.herokuapp.com/run_submission_group', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody)
+      });
+
+      const data = await response.json();
+      setIsSubmitting(false);
+      setSubmissionResponse(data.message || 'Success');
+      alert(data.message || 'Success'); // Simple alert, can be replaced with a modal for better UX
+    } catch (error) {
+      console.error('Error running submission:', error);
+      setIsSubmitting(false);
+      setSubmissionResponse('Error: Could not complete submission');
+      alert('Error: Could not complete submission');
+    }
   };
 
   const renderGridItems = (nodes, level = 0) => {
@@ -105,11 +138,22 @@ function BasicTreeView() {
       );
     });
   };
-  const clickableStyle = { flex: 1, padding: '10px', borderRight: '1px solid #ddd', cursor: 'pointer', color: 'blue', textDecoration: 'underline' };
+  const clickableStyle = {
+    flex: 1,
+    padding: '10px',
+    borderRight: '1px solid #ddd',
+    cursor: 'pointer',
+    color: '#007bff', // Softer blue color
+    textDecoration: 'none' // Remove underline
+  };
   return (
     <div>
       <h2>Submissions Grid</h2>
       {treeData ? renderGridItems(treeData.children) : <p>Loading submissions...</p>}
+        <button onClick={() => handleRunSubmission(selectedSubmissionGroupId)} disabled={isSubmitting}>
+            {isSubmitting ? 'Running...' : 'Run Submission Group'}
+        </button>
+      {submissionResponse && <div>{submissionResponse}</div>}
     </div>
   );
 }
