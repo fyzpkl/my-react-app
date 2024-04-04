@@ -49,8 +49,10 @@ function BasicTreeView() {
   // 15. Function to render grid items
   const renderGridItems = (nodes, level = 0) => {
     if (!nodes) return null;
+    const backgroundColors = ['#f0f8ff', '#e6f2ff', '#cce0ff', '#b3cfff', '#99bfff']; // Array of background colors for different levels
     return nodes.map((node, index) => {
       const nodeId = `node-${index}`;
+      const backgroundColor = backgroundColors[level % backgroundColors.length]; // Cycle through the colors for each level
       return (
         <React.Fragment key={nodeId}>
           <div style={{ 
@@ -59,7 +61,8 @@ function BasicTreeView() {
             display: 'flex', 
             justifyContent: 'space-between', 
             alignItems: 'center', 
-            marginLeft: `${level * 20}px`  // Indent child nodes
+            marginLeft: `${level * 20}px`,  // Indent child nodes
+            backgroundColor  // Apply the background color
           }}>
             <div onClick={() => toggleChildrenVisibility(node)} style={{ cursor: 'pointer' }}>
               {node.name || 'Unnamed Node'}
@@ -75,7 +78,6 @@ function BasicTreeView() {
       );
     });
   };
-
   // 16. The component's return statement that renders the UI
   return (
     <div>
