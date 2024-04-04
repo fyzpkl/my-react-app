@@ -56,15 +56,13 @@ function BasicTreeView() {
       });
 
       const data = await response.json();
-      setIsSubmitting(false);
-      setSubmissionResponse(data.message || 'Success');
       alert(data.message || 'Success'); // Simple alert, can be replaced with a modal for better UX
     } catch (error) {
       console.error('Error running submission:', error);
-      setIsSubmitting(false);
-      setSubmissionResponse('Error: Could not complete submission');
-      alert('Error: Could not complete submission');
+      alert('Error: Could not complete submission'); // Alert on error
     }
+    setIsSubmitting(false);
+    setButtonClicked(true); 
   };
 
   const renderGridItems = (nodes, level = 0) => {
@@ -131,7 +129,7 @@ function BasicTreeView() {
             </div>
           )}
             {node.submissionId && (
-              <div onClick={() => handleNodeClick(node.submissionId)} style={{ cursor: 'pointer', fontSize: 'smaller', color: 'blue', textDecoration: 'underline' }}>
+              <div onClick={() => handleNodeClick(node.submissionId)} style={clickableStyle}>
                 Click To Go Submission
               </div>
             )}
