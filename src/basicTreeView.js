@@ -60,8 +60,8 @@ function BasicTreeView() {
                  onClick={() => hasChildren && toggleChildrenVisibility(node)}>
               {node.name || 'Unnamed Node'}
             </div>
-{/* Agency Name */}
-{node.agencyId && (
+          {/* Agency Name */}
+          {node.agencyId && (
             <div onClick={() => handleNodeClick(node.agencyId, 'Agency__c')} style={clickableStyle}>
               Agency Name: {node.agencyName || 'No Agency'}
             </div>
@@ -94,7 +94,6 @@ function BasicTreeView() {
               Vendor Name: {node.vendorName || 'No Vendor'}
             </div>
           )}
-
             {node.submissionId && (
               <div onClick={() => handleNodeClick(node.submissionId)} style={{ cursor: 'pointer', fontSize: 'smaller', color: 'blue', textDecoration: 'underline' }}>
                 Click To Go Submission
@@ -106,7 +105,7 @@ function BasicTreeView() {
       );
     });
   };
-
+  const clickableStyle = { flex: 1, padding: '10px', borderRight: '1px solid #ddd', cursor: 'pointer', color: 'blue', textDecoration: 'underline' };
   return (
     <div>
       <h2>Submissions Grid</h2>
