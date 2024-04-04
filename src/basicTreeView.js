@@ -45,7 +45,7 @@ function BasicTreeView() {
 
     try {
       const response = await fetch('https://mk-be-0f3c24a58a9b.herokuapp.com/run_submission_group', {
-        method: 'GET',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
