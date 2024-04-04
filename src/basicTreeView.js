@@ -51,7 +51,7 @@ function BasicTreeView() {
         body: JSON.stringify(requestBody)
       });
       const data = await response.json();
-      alert(data.message || 'Success');
+      alert(data.message || data);
     } catch (error) {
       console.error('Error running submission:', error);
       alert('Error: Could not complete submission');
