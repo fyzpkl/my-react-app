@@ -60,21 +60,47 @@ function BasicTreeView() {
                  onClick={() => hasChildren && toggleChildrenVisibility(node)}>
               {node.name || 'Unnamed Node'}
             </div>
-            {/* Additional fields */}
-            {node.agencyId && (
-              <div onClick={() => handleNodeClick(node.agencyId, 'Agency__c')} style={{ flex: 1, padding: '10px', borderRight: '1px solid #ddd', cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}>
-                {node.agencyName || 'No Agency'}
-              </div>
-            )}
-            {/* More columns for each field */}
-            {/* ... */}
-            {/* Visual cue for clickable element */}
+{/* Agency Name */}
+{node.agencyId && (
+            <div onClick={() => handleNodeClick(node.agencyId, 'Agency__c')} style={clickableStyle}>
+              Agency Name: {node.agencyName || 'No Agency'}
+            </div>
+          )}
+
+          {/* Brand Name */}
+          {node.brandId && (
+            <div onClick={() => handleNodeClick(node.brandId, 'Brand__c')} style={clickableStyle}>
+              Brand Name: {node.brandName || 'No Brand'}
+            </div>
+          )}
+
+          {/* Master Ingredient Name */}
+          {node.masterIngredientId && (
+            <div onClick={() => handleNodeClick(node.masterIngredientId, 'MasterIngredient__c')} style={clickableStyle}>
+              Master Ingredient: {node.masterIngredientName || 'No Master Ingredient'}
+            </div>
+          )}
+
+          {/* Company Ingredient Name */}
+          {node.companyIngredientId && (
+            <div onClick={() => handleNodeClick(node.companyIngredientId, 'CompanyIngredient__c')} style={clickableStyle}>
+              Company Ingredient: {node.companyIngredientName || 'No Company Ingredient'}
+            </div>
+          )}
+
+          {/* Vendor Name */}
+          {node.vendorId && (
+            <div onClick={() => handleNodeClick(node.vendorId, 'Vendor__c')} style={clickableStyle}>
+              Vendor Name: {node.vendorName || 'No Vendor'}
+            </div>
+          )}
+
             {node.submissionId && (
               <div onClick={() => handleNodeClick(node.submissionId)} style={{ cursor: 'pointer', fontSize: 'smaller', color: 'blue', textDecoration: 'underline' }}>
                 Click To Go Submission
               </div>
             )}
-          </div>
+            </div>
           {hasChildren && node.isExpanded && renderGridItems(node.children, level + 1)}
         </React.Fragment>
       );
