@@ -65,7 +65,13 @@ function BasicTreeView() {
               {node.agency || 'N/A'}
             </div>
             {/* More columns for each field */}
-            {/* Add additional divs for each field like above */}
+            {/* ... */}
+            {/* Visual cue for clickable element */}
+            {node.submissionId && (
+              <div onClick={() => handleNodeClick(node.submissionId)} style={{ cursor: 'pointer', fontSize: 'smaller', color: 'blue', textDecoration: 'underline' }}>
+                View Submission
+              </div>
+            )}
           </div>
           {hasChildren && node.isExpanded && renderGridItems(node.children, level + 1)}
         </React.Fragment>
