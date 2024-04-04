@@ -61,15 +61,17 @@ function BasicTreeView() {
               {node.name || 'Unnamed Node'}
             </div>
             {/* Additional fields */}
-            <div style={{ flex: 1, padding: '10px', borderRight: '1px solid #ddd' }}>
-              {node.agency || 'N/A'}
-            </div>
+            {node.agency && (
+              <div style={{ flex: 1, padding: '10px', borderRight: '1px solid #ddd' }}>
+                Agency ID: {node.agency}
+              </div>
+            )}
             {/* More columns for each field */}
             {/* ... */}
             {/* Visual cue for clickable element */}
             {node.submissionId && (
               <div onClick={() => handleNodeClick(node.submissionId)} style={{ cursor: 'pointer', fontSize: 'smaller', color: 'blue', textDecoration: 'underline' }}>
-                View Submission
+                Click To Go Submission
               </div>
             )}
           </div>
