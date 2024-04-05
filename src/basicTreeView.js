@@ -155,7 +155,6 @@ function BasicTreeView() {
     });
   };
   const renderApiResponseTable = () => {
-    // Only render if parsedResponse and createdObjects are available
     if (!parsedResponse || !parsedResponse.createdObjects) {
         return null;
     }
@@ -163,19 +162,19 @@ function BasicTreeView() {
       <table style={tableStyle}>
           <thead>
               <tr>
-                  <th style={thStyle}>Submission ID</th>
-                  <th style={thStyle}>Object Type</th>
                   <th style={thStyle}>Object Name</th>
-                  <th style={thStyle}>Object ID</th>
               </tr>
           </thead>
           <tbody>
               {parsedResponse.createdObjects.map((obj, index) => (
-                  <tr key={index}>
-                      <td style={tdStyle}>{obj.submissionId}</td>
-                      <td style={tdStyle}>{obj.objectType}</td>
-                      <td style={tdStyle}>{obj.objectName}</td>
-                      <td style={tdStyle}>{obj.objectId || "Not Available"}</td>
+                  <tr key={index} style={{ backgroundColor: index % 2 === 0 ? '#f9f9f9' : 'white' }}>
+                      <td style={tdStyle}>
+                        <a href={`${salesforceInstance}lightning/r/${obj.objectType}/${obj.objectId}/view`} 
+                           target="_blank" 
+                           style={clickableStyle}>
+                          {obj.objectName || "Unnamed Object"}
+                        </a>
+                      </td>
                   </tr>
               ))}
           </tbody>
