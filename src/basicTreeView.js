@@ -160,33 +160,33 @@ function BasicTreeView() {
         return null;
     }
     return (
-          <table>
-              <thead>
-                  <tr>
-                      <th>Submission ID</th>
-                      <th>Object Type</th>
-                      <th>Object Name</th>
-                      <th>Object ID</th>
+      <table style={tableStyle}>
+          <thead>
+              <tr>
+                  <th style={thStyle}>Submission ID</th>
+                  <th style={thStyle}>Object Type</th>
+                  <th style={thStyle}>Object Name</th>
+                  <th style={thStyle}>Object ID</th>
+              </tr>
+          </thead>
+          <tbody>
+              {parsedResponse.createdObjects.map((obj, index) => (
+                  <tr key={index}>
+                      <td style={tdStyle}>{obj.submissionId}</td>
+                      <td style={tdStyle}>{obj.objectType}</td>
+                      <td style={tdStyle}>{obj.objectName}</td>
+                      <td style={tdStyle}>{obj.objectId || "Not Available"}</td>
                   </tr>
-              </thead>
-              <tbody>
-                  {parsedResponse.createdObjects.map((obj, index) => (
-                      <tr key={index}>
-                          <td>{obj.submissionId}</td>
-                          <td>{obj.objectType}</td>
-                          <td>{obj.objectName}</td>
-                          <td>{obj.objectId || "Not Available"}</td>
-                      </tr>
-                  ))}
-              </tbody>
-          </table>
-      );
+              ))}
+          </tbody>
+        </table>
+    );
   };
   const renderUserFriendlyMessage = () => {
     if (!parsedResponse) return null;
 
     if (parsedResponse.status === "Success") {
-        return <h3>Success</h3>;
+        return <h3>Successfull - Created Objects</h3>;
     } else if (parsedResponse.status === "Error" || parsedResponse.error) {
         // Assuming an error field for demonstration
         return <h3 style={{ color: 'red' }}>Error: {parsedResponse.errorMessage}</h3>;
@@ -201,6 +201,24 @@ function BasicTreeView() {
     cursor: 'pointer',
     color: '#007bff', // Softer blue color
     textDecoration: 'none' // Remove underline
+  };
+  const tableStyle = {
+    width: '100%',
+    borderCollapse: 'collapse',
+    marginTop: '20px',
+  };
+
+  const thStyle = {
+      backgroundColor: '#4CAF50',
+      color: 'white',
+      padding: '10px',
+      border: '1px solid #ddd',
+  };
+
+  const tdStyle = {
+      padding: '8px',
+      border: '1px solid #ddd',
+      textAlign: 'left',
   };
 
   return (
@@ -231,7 +249,7 @@ function BasicTreeView() {
       {apiResponse && (
                 <div>
                 {renderUserFriendlyMessage()} {/* Render user-friendly message */}
-                <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{apiResponse}</pre>
+                <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}></pre>
                 {renderApiResponseTable()} {/* Render the API response table */}
             </div>
       )}
