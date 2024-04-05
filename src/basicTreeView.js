@@ -7,6 +7,8 @@ function BasicTreeView() {
   const [buttonClicked, setButtonClicked] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [apiResponse, setApiResponse] = useState(null);
+  const [parsedResponse, setParsedResponse] = useState(null); // New state for parsed API response
+
   useEffect(() => {
     const handleMessage = (event) => {
       if (event.origin !== "https://enterprise-force-7539--partialsb.sandbox.lightning.force.com") {
@@ -24,6 +26,21 @@ function BasicTreeView() {
     window.addEventListener('message', handleMessage);
     return () => window.removeEventListener('message', handleMessage);
   }, []);
+
+  useEffect(() => {
+    if (apiResponse) {
+        try {
+            // Parse the response and extract "Created Objects"
+            const data = JSON.parse(apiResponse);
+            const createdObjects = data["Created Objects"] ? JSON.parse(data["Created Objects"]) : null;
+            setParsedResponse({ ...data, createdObjects });
+        } catch (error) {
+            // Handle any parsing errors
+            console.error('Error parsing API response:', error);
+            setParsedResponse(null);
+        }
+    }
+  }, [apiResponse]);
 
   const handleNodeClick = (submissionId) => {
     const objectUrl = `${salesforceInstance}lightning/r/Submission_Group__c/${submissionId}/view`;
@@ -137,6 +154,46 @@ function BasicTreeView() {
       );
     });
   };
+  const renderApiResponseTable = () => {
+    // Only render if parsedResponse and createdObjects are available
+    if (!parsedResponse || !parsedResponse.createdObjects) {
+        return null;
+    }
+    return (
+          <table>
+              <thead>
+                  <tr>
+                      <th>Submission ID</th>
+                      <th>Object Type</th>
+                      <th>Object Name</th>
+                      <th>Object ID</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  {parsedResponse.createdObjects.map((obj, index) => (
+                      <tr key={index}>
+                          <td>{obj.submissionId}</td>
+                          <td>{obj.objectType}</td>
+                          <td>{obj.objectName}</td>
+                          <td>{obj.objectId || "Not Available"}</td>
+                      </tr>
+                  ))}
+              </tbody>
+          </table>
+      );
+  };
+  const renderUserFriendlyMessage = () => {
+    if (!parsedResponse) return null;
+
+    if (parsedResponse.status === "Success") {
+        return <h3>Success</h3>;
+    } else if (parsedResponse.status === "Error" || parsedResponse.error) {
+        // Assuming an error field for demonstration
+        return <h3 style={{ color: 'red' }}>Error: {parsedResponse.errorMessage}</h3>;
+    } else {
+        return <h3>Operation Status: {parsedResponse.status}</h3>;
+    }
+};
   const clickableStyle = {
     flex: 1,
     padding: '10px',
@@ -145,6 +202,7 @@ function BasicTreeView() {
     color: '#007bff', // Softer blue color
     textDecoration: 'none' // Remove underline
   };
+
   return (
   <div style={{ position: 'relative' }}>
       <h2>Group Submission</h2>
@@ -171,10 +229,11 @@ function BasicTreeView() {
       {treeData ? renderGridItems(treeData.children) : <p>Loading submissions...</p>}
 
       {apiResponse && (
-          <div>
-              <h3>API Response:</h3>
-              <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{apiResponse}</pre> {/* Display the response in a formatted manner */}
-          </div>
+                <div>
+                {renderUserFriendlyMessage()} {/* Render user-friendly message */}
+                <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{apiResponse}</pre>
+                {renderApiResponseTable()} {/* Render the API response table */}
+            </div>
       )}
   </div>
   );
