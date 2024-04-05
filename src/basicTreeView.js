@@ -146,19 +146,37 @@ function BasicTreeView() {
     textDecoration: 'none' // Remove underline
   };
   return (
-    <div>
-      <h2>Submissions Grid</h2>
-      {treeData ? renderGridItems(treeData.children) : <p>Loading submissions...</p>}
+  <div style={{ position: 'relative' }}>
+      <h2>Group Submission</h2>
       {!buttonClicked && (
-        <button onClick={() => handleRunSubmission(selectedSubmissionGroupId)} disabled={isSubmitting}>
-          {isSubmitting ? 'Running...' : 'Run Submission Group'}
-        </button>
+          <button
+              onClick={() => handleRunSubmission(selectedSubmissionGroupId)}
+              disabled={isSubmitting}
+              style={{
+                  position: 'absolute',
+                  top: 0,
+                  right: 0,
+                  padding: '10px 20px',
+                  backgroundColor: '#4CAF50', // Green background
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '5px',
+                  cursor: isSubmitting ? 'default' : 'pointer',
+                  fontSize: '16px'
+              }}
+          >
+              {isSubmitting ? 'Running...' : 'Run Submission Group'}
+          </button>
       )}
-      {apiResponse && <div>
-        <h3>API Response:</h3>
-        <pre>{apiResponse}</pre> {/* Display the response in a formatted manner */}
-      </div>}
-    </div>
+      {treeData ? renderGridItems(treeData.children) : <p>Loading submissions...</p>}
+
+      {apiResponse && (
+          <div>
+              <h3>API Response:</h3>
+              <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{apiResponse}</pre> {/* Display the response in a formatted manner */}
+          </div>
+      )}
+  </div>
   );
 }
 
