@@ -66,7 +66,8 @@ function BasicTreeView() {
       "handled_by": handledById, 
       "company_id": companyId
     };
-    console.log('request body' + requestBody);
+    console.log('companyIdy' + handledById);
+    console.log('companyId' + companyId);
     // try {
     //   const response = await fetch('https://mk-be-0f3c24a58a9b.herokuapp.com/run_submission_group', {
     //     method: 'POST',
