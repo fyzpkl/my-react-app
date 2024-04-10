@@ -112,6 +112,12 @@ function BasicTreeView() {
                  onClick={() => hasChildren && toggleChildrenVisibility(node)}>
               {node.name || 'Unnamed Node'}
             </div>
+            {/* Render Object_Name__c */}
+              {node.Object_Name__c && (
+                <div style={{ padding: '10px', borderRight: '1px solid #ddd' }}>
+                            Name : {node.Object_Name__c}
+                  </div>
+                )}
           {/* Agency Name */}
           {node.agencyId && (
             <div onClick={() => handleNodeClick(node.agencyId, 'Agency__c')} style={clickableStyle}>
