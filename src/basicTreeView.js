@@ -8,6 +8,8 @@ function BasicTreeView() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [apiResponse, setApiResponse] = useState(null);
   const [parsedResponse, setParsedResponse] = useState(null); // New state for parsed API response
+  const [companyId, setCompanyId] = useState(null);
+  const [handledById, setHandledById] = useState(null);
 
   useEffect(() => {
     const handleMessage = (event) => {
@@ -16,11 +18,13 @@ function BasicTreeView() {
         return;
       }
 
-      if (event.data && event.data.source === 'SalesforceLWC') {
+    if (event.data && event.data.source === 'SalesforceLWC') {
         const data = typeof event.data.treeData === 'string' ? JSON.parse(event.data.treeData) : event.data.treeData;
         setTreeData(data);
-        setSelectedSubmissionGroupId(data.groupId); // Assuming groupId is directly available in the data
-      }
+        setSelectedSubmissionGroupId(data.groupId); 
+        setCompanyId(event.data.companyId); 
+        setHandledById(event.data.handledById);
+    }
     };
 
     window.addEventListener('message', handleMessage);
@@ -57,8 +61,8 @@ function BasicTreeView() {
     
     const requestBody = {
       "submission_group": submissionGroupId,
-      "handled_by": "005Hp00000iLBIQIA4",
-      "company_id": "001Dy000010kEjjIAE"
+      "handled_by": handledById, 
+      "company_id": companyId
     };
 
     try {
