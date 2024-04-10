@@ -13,12 +13,14 @@ function BasicTreeView() {
 
   useEffect(() => {
     const handleMessage = (event) => {
+      console.log('Message received:', event);
       if (event.origin !== "https://enterprise-force-7539--partialsb.sandbox.lightning.force.com") {
         console.log('Invalid origin:', event.origin);
         return;
       }
 
     if (event.data && event.data.source === 'SalesforceLWC') {
+
         const data = typeof event.data.treeData === 'string' ? JSON.parse(event.data.treeData) : event.data.treeData;
         setTreeData(data);
         setSelectedSubmissionGroupId(data.groupId); 
