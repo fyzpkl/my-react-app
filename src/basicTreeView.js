@@ -69,10 +69,8 @@ function BasicTreeView() {
       });
       const data = await response.json();
       setApiResponse(JSON.stringify(data, null, 2));
-      alert(data.message || "Success");
     } catch (error) {
       console.error('Error running submission:', error);
-      alert('Error: Could not complete submission');
       setApiResponse('Error: Could not complete submission'); 
     } finally {
       setIsSubmitting(false);
