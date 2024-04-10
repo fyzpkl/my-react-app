@@ -113,9 +113,9 @@ function BasicTreeView() {
               {node.name || 'Unnamed Node'}
             </div>
             {/* Render Object_Name__c */}
-              {node.Object_Name__c && (
+              {node.objectName && (
                 <div style={{ padding: '10px', borderRight: '1px solid #ddd' }}>
-                            Name : {node.Object_Name__c}
+                            Name : {node.objectName}
                   </div>
                 )}
           {/* Agency Name */}
