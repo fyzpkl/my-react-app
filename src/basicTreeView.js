@@ -66,23 +66,23 @@ function BasicTreeView() {
       "handled_by": handledById, 
       "company_id": companyId
     };
+    console.log('request body' + requestBody);
+    // try {
+    //   const response = await fetch('https://mk-be-0f3c24a58a9b.herokuapp.com/run_submission_group', {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify(requestBody)
+    //   });
+    //   const data = await response.json();
+    //   setApiResponse(JSON.stringify(data, null, 2));
+    // } catch (error) {
+    //   console.error('Error running submission:', error);
+    //   setApiResponse('Error: Could not complete submission'); 
+    // } finally {
+    //   setIsSubmitting(false);
+    //   setButtonClicked(true);
 
-    try {
-      const response = await fetch('https://mk-be-0f3c24a58a9b.herokuapp.com/run_submission_group', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(requestBody)
-      });
-      const data = await response.json();
-      setApiResponse(JSON.stringify(data, null, 2));
-    } catch (error) {
-      console.error('Error running submission:', error);
-      setApiResponse('Error: Could not complete submission'); 
-    } finally {
-      setIsSubmitting(false);
-      setButtonClicked(true);
-
-    }
+    // }
    };
   const renderGridItems = (nodes, level = 0) => {
     if (!nodes) return null;
