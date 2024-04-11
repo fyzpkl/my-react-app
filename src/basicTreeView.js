@@ -87,7 +87,7 @@ function BasicTreeView() {
     }
    };
 
-  const renderGridItems = (nodes, level = 0) => {
+   const renderGridItems = (nodes, level = 0) => {
     if (!nodes) return null;
 
     const baseBackgroundColors = ['#f0f8ff', '#e6f2ff', '#cce0ff', '#b3cfff', '#99bfff'];
@@ -120,10 +120,39 @@ function BasicTreeView() {
             <div style={{ flex: 1, padding: '10px', borderRight: '1px solid #ddd', cursor: hasChildren ? 'pointer' : 'default' }}
                  onClick={() => hasChildren && toggleChildrenVisibility(node)}>
               {node.name || 'Unnamed Node'}
-              {/* Conditional rendering based on node type right after the node name */}
-              {renderNodeTypeSpecificDetails(node, level)}
             </div>
-
+            {/* S */}
+            {isMasterIngredient && node.isExpanded && (
+              <div className="special-node-details-row" style={{ marginLeft: `${level * 20 + 20}px` }}>
+                <div className="special-node-detail-cell">Expiration Date: {node.expirationDate || 'Not available'}</div>
+                <div className="special-node-detail-cell">KID: {node.kid || 'Not available'}</div>
+                <div className="special-node-detail-cell">Passover: {node.passover !== null ? node.passover.toString() : 'Not available'}</div>
+                <div className="special-node-detail-cell">UID Info: {node.uidInfo || 'Not available'}</div>
+                <div className="special-node-detail-cell">UKD: {node.ukd || 'Not available'}</div>
+                <div className="special-node-detail-cell">DPM: {node.dpm || 'Not available'}</div>
+              
+              </div>
+          )}
+            {isVendor && node.isExpanded && (
+              <div className="special-node-details-row" style={{ marginLeft: `${level * 20 + 20}px` }}>
+                <div className="special-node-detail-cell">Name : {node.objectName || 'Not available'}</div>
+              </div>
+          )}
+            {isBrand && node.isExpanded && (
+              <div className="special-node-details-row" style={{ marginLeft: `${level * 20 + 20}px` }}>
+                <div className="special-node-detail-cell">Name : {node.objectName || 'Not available'}</div>
+              </div>
+          )}
+              {isCompanyIngredient && (
+              <div className="special-node-details-row" style={{ marginLeft: `${level * 20 + 20}px` }}>
+                <div className="special-node-detail-cell">Name : {node.objectName || 'Not available'}</div>
+              </div>
+          )}
+            {isGroup && (
+              <div className="special-node-details-row" style={{ marginLeft: `${level * 20 + 20}px` }}>
+                <div className="special-node-detail-cell">Name : {node.objectName || 'Not available'}</div>
+              </div>
+            )}
           {/* Agency Name */}
           {node.agencyId && (
             <div onClick={() => handleNodeClick(node.agencyId, 'Agency__c')} style={clickableStyle}>
@@ -171,71 +200,71 @@ function BasicTreeView() {
       );
     });
   };
-  function renderNodeTypeSpecificDetails(node, level) {
-    const marginLeftStyle = { marginLeft: `${level * 20 + 20}px` };
+  // function renderNodeTypeSpecificDetails(node, level) {
+  //   const marginLeftStyle = { marginLeft: `${level * 20 + 20}px` };
   
-    if (node.type === 'Use Master Ingredient ID In Child' || node.type === 'Create Master Ingredient') {
-      return (
-        <div className="special-node-details-row" style={marginLeftStyle}>
-          <div className="special-node-detail-cell">Expiration Date: {node.expirationDate || 'Not available'}</div>
-          <div className="special-node-detail-cell">KID: {node.kid || 'Not available'}</div>
-          <div className="special-node-detail-cell">Passover: {node.passover !== null ? node.passover.toString() : 'Not available'}</div>
-          <div className="special-node-details-row" style={marginLeftStyle}></div>
-          <div className="special-node-detail-cell">UID Info: {node.uidInfo || 'Not available'}</div>
-          <div className="special-node-detail-cell">UKD: {node.ukd || 'Not available'}</div>
-          <div className="special-node-detail-cell">DPM: {node.dpm || 'Not available'}</div>
-          </div>
-      );
-    } else if (node.type === 'Create Vendor' || node.type === 'Create Brand' || node.type === 'Create Company Ingredient' || node.type === 'Create Group') {
-      return (
-        <div className="special-node-details-row" style={marginLeftStyle}>
-          <div className="special-node-detail-cell">Name: {node.objectName || 'Not available'}</div>
-        </div>
-      );
-    }
-      else if (node.type === 'Create Vendor') {
-        return (
-          <div className="special-node-details-row" style={marginLeftStyle}>
-            <div className="special-node-detail-cell">Vendor Name: {node.objectName || 'Not available'}</div>
-            {/* Add other vendor-specific details if necessary */}
-          </div>
-        );
-      }
+  //   if (node.type === 'Use Master Ingredient ID In Child' || node.type === 'Create Master Ingredient') {
+  //     return (
+  //       <div className="special-node-details-row" style={marginLeftStyle}>
+  //         <div className="special-node-detail-cell">Expiration Date: {node.expirationDate || 'Not available'}</div>
+  //         <div className="special-node-detail-cell">KID: {node.kid || 'Not available'}</div>
+  //         <div className="special-node-detail-cell">Passover: {node.passover !== null ? node.passover.toString() : 'Not available'}</div>
+  //         <div className="special-node-details-row" style={marginLeftStyle}></div>
+  //         <div className="special-node-detail-cell">UID Info: {node.uidInfo || 'Not available'}</div>
+  //         <div className="special-node-detail-cell">UKD: {node.ukd || 'Not available'}</div>
+  //         <div className="special-node-detail-cell">DPM: {node.dpm || 'Not available'}</div>
+  //         </div>
+  //     );
+  //   } else if (node.type === 'Create Vendor' || node.type === 'Create Brand' || node.type === 'Create Company Ingredient' || node.type === 'Create Group') {
+  //     return (
+  //       <div className="special-node-details-row" style={marginLeftStyle}>
+  //         <div className="special-node-detail-cell">Name: {node.objectName || 'Not available'}</div>
+  //       </div>
+  //     );
+  //   }
+  //     else if (node.type === 'Create Vendor') {
+  //       return (
+  //         <div className="special-node-details-row" style={marginLeftStyle}>
+  //           <div className="special-node-detail-cell">Vendor Name: {node.objectName || 'Not available'}</div>
+  //           {/* Add other vendor-specific details if necessary */}
+  //         </div>
+  //       );
+  //     }
     
-      // Render for 'Create Brand'
-      else if (node.type === 'Create Brand') {
-        return (
-          <div className="special-node-details-row" style={marginLeftStyle}>
-            <div className="special-node-detail-cell">Brand Name: {node.objectName || 'Not available'}</div>
-            {/* Add other brand-specific details if necessary */}
-          </div>
-        );
-      }
+  //     // Render for 'Create Brand'
+  //     else if (node.type === 'Create Brand') {
+  //       return (
+  //         <div className="special-node-details-row" style={marginLeftStyle}>
+  //           <div className="special-node-detail-cell">Brand Name: {node.objectName || 'Not available'}</div>
+  //           {/* Add other brand-specific details if necessary */}
+  //         </div>
+  //       );
+  //     }
     
-      // Render for 'Create Company Ingredient'
-      else if (node.type === 'Create Company Ingredient') {
-        return (
-          <div className="special-node-details-row" style={marginLeftStyle}>
-            <div className="special-node-detail-cell">Company Ingredient: {node.objectName || 'Not available'}</div>
-            {/* Add other company ingredient-specific details if necessary */}
-          </div>
-        );
-      }
+  //     // Render for 'Create Company Ingredient'
+  //     else if (node.type === 'Create Company Ingredient') {
+  //       return (
+  //         <div className="special-node-details-row" style={marginLeftStyle}>
+  //           <div className="special-node-detail-cell">Company Ingredient: {node.objectName || 'Not available'}</div>
+  //           {/* Add other company ingredient-specific details if necessary */}
+  //         </div>
+  //       );
+  //     }
     
-      // Render for 'Create Group'
-      else if (node.type === 'Create Group') {
-        return (
-          <div className="special-node-details-row" style={marginLeftStyle}>
-            <div className="special-node-detail-cell">Group Name: {node.objectName || 'Not available'}</div>
-            {/* Add other group-specific details if necessary */}
-          </div>
-        );
-      }
+  //     // Render for 'Create Group'
+  //     else if (node.type === 'Create Group') {
+  //       return (
+  //         <div className="special-node-details-row" style={marginLeftStyle}>
+  //           <div className="special-node-detail-cell">Group Name: {node.objectName || 'Not available'}</div>
+  //           {/* Add other group-specific details if necessary */}
+  //         </div>
+  //       );
+  //     }
     
     
-    // Return null if no specific type matches
-    return null;
-  }
+  //   // Return null if no specific type matches
+  //   return null;
+  // }
   const renderApiResponseTable = () => {
     if (!parsedResponse || !parsedResponse.createdObjects) {
         return null;
