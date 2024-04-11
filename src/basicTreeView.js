@@ -11,6 +11,7 @@ function BasicTreeView() {
   const [companyId, setCompanyId] = useState(null);
   const [handledById, setHandledById] = useState(null);
   const [hoveredNode, setHoveredNode] = useState(null);
+  const [debugMessage, setDebugMessage] = useState('');
 
   useEffect(() => {
     const handleMessage = (event) => {
@@ -50,7 +51,10 @@ function BasicTreeView() {
   }, [apiResponse]);
 
   const handleMouseEnter = (node) => {
+    alert('Hover event triggered');
+    setDebugMessage('Hover event triggered');
     console.log('Hovered over node:', node); // Add this for debugging
+    console.log(node);
     setHoveredNode(node);
   };
 
@@ -103,6 +107,7 @@ function BasicTreeView() {
         zIndex: 1000 
       }}>
         {/* Displaying the additional information */}
+        <p>{debugMessage}</p>
         <p>Hovered Node Data: {JSON.stringify(hoveredNode)}</p> {/* Debugging line */}
         <p>Name: {hoveredNode.objectName || 'N/A'}</p>
         <p>Expiration Date: {hoveredNode.expirationDate ? hoveredNode.expirationDate.toString() : 'N/A'}</p>
