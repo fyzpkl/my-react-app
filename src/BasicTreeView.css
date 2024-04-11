@@ -65,5 +65,11 @@
     overflow: hidden;
     text-overflow: ellipsis; /* In case of overflow */
   }
+  .node-name {
+    flex: 1;
+    padding: 10px;
+    border-right: 1px solid #ddd;
+    cursor: pointer;
+  }
 
   

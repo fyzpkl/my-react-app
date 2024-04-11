@@ -111,28 +111,25 @@ function BasicTreeView() {
           <div style={{ 
             padding: '10px', 
             border: '1px solid #ddd', 
-            display: 'flex', 
-            justifyContent: 'space-between', 
-            alignItems: 'center', 
+            flexDirection: 'column',  // Adjust to stack items vertically
             marginLeft: `${level * 20}px`, 
             backgroundColor 
           }}>
-            <div style={{ flex: 1, padding: '10px', borderRight: '1px solid #ddd', cursor: hasChildren ? 'pointer' : 'default' }}
-                 onClick={() => hasChildren && toggleChildrenVisibility(node)}>
-              {node.name || 'Unnamed Node'}
-            </div>
-            {/* S */}
+          <div style={{ padding: '10px', borderRight: '1px solid #ddd', cursor: hasChildren ? 'pointer' : 'default' }}
+              onClick={() => hasChildren && toggleChildrenVisibility(node)}>
+            {node.name || 'Unnamed Node'}
+          </div>
+            {/* Special */}
             {isMasterIngredient && node.isExpanded && (
-              <div className="special-node-details-row" style={{ marginLeft: `${level * 20 + 20}px` }}>
+              <div className="special-node-details-row">
                 <div className="special-node-detail-cell">Expiration Date: {node.expirationDate || 'Not available'}</div>
                 <div className="special-node-detail-cell">KID: {node.kid || 'Not available'}</div>
                 <div className="special-node-detail-cell">Passover: {node.passover !== null ? node.passover.toString() : 'Not available'}</div>
                 <div className="special-node-detail-cell">UID Info: {node.uidInfo || 'Not available'}</div>
                 <div className="special-node-detail-cell">UKD: {node.ukd || 'Not available'}</div>
                 <div className="special-node-detail-cell">DPM: {node.dpm || 'Not available'}</div>
-              
               </div>
-          )}
+            )}
             {isVendor && node.isExpanded && (
               <div className="special-node-details-row" style={{ marginLeft: `${level * 20 + 20}px` }}>
                 <div className="special-node-detail-cell">Name : {node.objectName || 'Not available'}</div>
