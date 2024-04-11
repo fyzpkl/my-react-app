@@ -180,11 +180,11 @@ function BasicTreeView() {
           <div className="special-node-detail-cell">Expiration Date: {node.expirationDate || 'Not available'}</div>
           <div className="special-node-detail-cell">KID: {node.kid || 'Not available'}</div>
           <div className="special-node-detail-cell">Passover: {node.passover !== null ? node.passover.toString() : 'Not available'}</div>
+          <div className="special-node-details-row" style={marginLeftStyle}></div>
           <div className="special-node-detail-cell">UID Info: {node.uidInfo || 'Not available'}</div>
           <div className="special-node-detail-cell">UKD: {node.ukd || 'Not available'}</div>
           <div className="special-node-detail-cell">DPM: {node.dpm || 'Not available'}</div>
-          <div className="special-node-detail-cell">Type: {node.type}</div>
-        </div>
+          </div>
       );
     } else if (node.type === 'Create Vendor' || node.type === 'Create Brand' || node.type === 'Create Company Ingredient' || node.type === 'Create Group') {
       return (
