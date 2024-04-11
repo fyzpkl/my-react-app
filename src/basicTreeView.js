@@ -107,6 +107,27 @@ function BasicTreeView() {
 
     }
    };
+   {hoveredNode && (
+      <div style={{
+        position: 'absolute',
+        left: '100%', 
+        top: 0,
+        border: '1px solid black',
+        backgroundColor: 'white',
+        padding: '10px',
+        zIndex: 1000 
+      }}>
+        {/* Displaying the additional information */}
+        <p>Hovered Node Data: {JSON.stringify(hoveredNode)}</p> {/* Debugging line */}
+        <p>Name: {hoveredNode.objectName || 'N/A'}</p>
+        <p>Expiration Date: {hoveredNode.expirationDate ? hoveredNode.expirationDate.toString() : 'N/A'}</p>
+        <p>KID: {hoveredNode.kid || 'N/A'}</p>
+        <p>Passover: {hoveredNode.passover ? 'Yes' : 'No'}</p>
+        <p>UID Info: {hoveredNode.uidInfo || 'N/A'}</p>
+        <p>UKD: {hoveredNode.ukd || 'N/A'}</p>
+        <p>DPM: {hoveredNode.dpm || 'N/A'}</p>
+      </div>
+    )}
   
   const renderGridItems = (nodes, level = 0) => {
     if (!nodes) return null;
