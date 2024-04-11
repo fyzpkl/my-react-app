@@ -10,7 +10,7 @@ function BasicTreeView() {
   const [parsedResponse, setParsedResponse] = useState(null); // New state for parsed API response
   const [companyId, setCompanyId] = useState(null);
   const [handledById, setHandledById] = useState(null);
-  const [clickedNodeInfo, setClickedNodeInfo] = useState(null);
+ 
 
   useEffect(() => {
     const handleMessage = (event) => {
@@ -85,24 +85,7 @@ function BasicTreeView() {
 
     }
    };
-   const handleNodeClickAction = (node) => {
-    // Check if the clicked node is of type "Create Master Ingredient"
-    if (node.type === 'Create Master Ingredient' || node.type === 'Use Master Ingredient ID In Child') {
-      // Set the information of the clicked node to display
-      setClickedNodeInfo({
-        name: node.masterIngredientName || 'N/A',
-        expirationDate: node.expirationDate ? node.expirationDate.toString() : 'N/A',
-        kid: node.kid || 'N/A',
-        passover: node.passover ? 'Yes' : 'No',
-        uidInfo: node.uidInfo || 'N/A',
-        ukd: node.ukd || 'N/A',
-        dpm: node.dpm || 'N/A'
-      });
-    } else {
-      // Reset clickedNodeInfo if the clicked node is not of type "Create Master Ingredient"
-      setClickedNodeInfo(null);
-    }
-  };
+
   const renderGridItems = (nodes, level = 0) => {
     if (!nodes) return null;
 
@@ -116,7 +99,7 @@ function BasicTreeView() {
       if (!hasChildren) {
         backgroundColor = colorAdjustmentForNoChildren;
       }
-
+      const isSpecialType = node.type === 'Use Master Ingredient ID In Child' || node.type === 'Create Master Ingredient';
       return (
         <React.Fragment key={nodeId}>
           <div style={{ 
@@ -132,7 +115,18 @@ function BasicTreeView() {
                  onClick={() => hasChildren && toggleChildrenVisibility(node)}>
               {node.name || 'Unnamed Node'}
             </div>
-
+            {/* S */}
+            {isSpecialType && node.isExpanded && (
+                        <div style={{ marginLeft: `${level * 20 + 20}px`, backgroundColor: '#f5f5f5', padding: '10px', border: '1px solid #ddd' }}>
+                            <div>Expiration Date: {node.expirationDate || 'Not available'}</div>
+                            <div>KID: {node.kid || 'Not available'}</div>
+                            <div>Passover: {node.passover !== null ? node.passover.toString() : 'Not available'}</div>
+                            <div>UID Info: {node.uidInfo || 'Not available'}</div>
+                            <div>UKD: {node.ukd || 'Not available'}</div>
+                            <div>DPM: {node.dpm || 'Not available'}</div>
+                            <div>Type: {node.type || 'Not available'}</div>
+                        </div>
+                    )}
           {/* Agency Name */}
           {node.agencyId && (
             <div onClick={() => handleNodeClick(node.agencyId, 'Agency__c')} style={clickableStyle}>
@@ -247,62 +241,40 @@ function BasicTreeView() {
   };
 
   return (
-    <div style={{ position: 'relative' }}>
+  <div style={{ position: 'relative' }}>
       <h2>Group Submission</h2>
       {!buttonClicked && (
-        <button
-          onClick={() => handleRunSubmission(selectedSubmissionGroupId)}
-          disabled={isSubmitting}
-          style={{
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            padding: '10px 20px',
-            backgroundColor: '#4CAF50', // Green background
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: isSubmitting ? 'default' : 'pointer',
-            fontSize: '16px'
-          }}
-        >
-          {isSubmitting ? 'Running...' : 'Run Submission Group'}
-        </button>
+          <button
+              onClick={() => handleRunSubmission(selectedSubmissionGroupId)}
+              disabled={isSubmitting}
+              style={{
+                  position: 'absolute',
+                  top: 0,
+                  right: 0,
+                  padding: '10px 20px',
+                  backgroundColor: '#4CAF50', // Green background
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '5px',
+                  cursor: isSubmitting ? 'default' : 'pointer',
+                  fontSize: '16px'
+              }}
+          >
+              {isSubmitting ? 'Running...' : 'Run Submission Group'}
+          </button>
       )}
       {treeData ? renderGridItems(treeData.children) : <p>Loading submissions...</p>}
-  
+
       {apiResponse && (
-        <div>
-          {renderUserFriendlyMessage()} {/* Render user-friendly message */}
-          <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}></pre>
-          {renderApiResponseTable()} {/* Render the API response table */}
-          {/* Display the clicked node information in a popover */}
-          {clickedNodeInfo && (
-            <div style={{
-              position: 'absolute',
-              left: '50%',
-              top: '50%',
-              transform: 'translate(-50%, -50%)',
-              backgroundColor: 'white',
-              padding: '20px',
-              border: '1px solid #ddd',
-              boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-              zIndex: 1000
-            }}>
-              <p>Name: {clickedNodeInfo.name}</p>
-              <p>Expiration Date: {clickedNodeInfo.expirationDate}</p>
-              <p>KID: {clickedNodeInfo.kid}</p>
-              <p>Passover: {clickedNodeInfo.passover}</p>
-              <p>UID Info: {clickedNodeInfo.uidInfo}</p>
-              <p>UKD: {clickedNodeInfo.ukd}</p>
-              <p>DPM: {clickedNodeInfo.dpm}</p>
+                <div>
+                {renderUserFriendlyMessage()} {/* Render user-friendly message */}
+                <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}></pre>
+                {renderApiResponseTable()} {/* Render the API response table */}
             </div>
-          )}
-        </div>
+            
       )}
-    </div>
+  </div>
   );
-  
 }
 
 export default BasicTreeView;
