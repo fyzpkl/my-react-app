@@ -111,25 +111,16 @@ function BasicTreeView() {
           <div style={{ 
             padding: '10px', 
             border: '1px solid #ddd', 
-            flexDirection: 'column',  // Adjust to stack items vertically
+            flexDirection: 'column',  // Ensure vertical layout
             marginLeft: `${level * 20}px`, 
             backgroundColor 
           }}>
-          <div style={{ padding: '10px', borderRight: '1px solid #ddd', cursor: hasChildren ? 'pointer' : 'default' }}
-              onClick={() => hasChildren && toggleChildrenVisibility(node)}>
-            {node.name || 'Unnamed Node'}
-          </div>
-            {/* Special */}
-            {isMasterIngredient && node.isExpanded && (
-              <div className="special-node-details-row">
-                <div className="special-node-detail-cell">Expiration Date: {node.expirationDate || 'Not available'}</div>
-                <div className="special-node-detail-cell">KID: {node.kid || 'Not available'}</div>
-                <div className="special-node-detail-cell">Passover: {node.passover !== null ? node.passover.toString() : 'Not available'}</div>
-                <div className="special-node-detail-cell">UID Info: {node.uidInfo || 'Not available'}</div>
-                <div className="special-node-detail-cell">UKD: {node.ukd || 'Not available'}</div>
-                <div className="special-node-detail-cell">DPM: {node.dpm || 'Not available'}</div>
-              </div>
-            )}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ flex: 1, padding: '10px', borderRight: '1px solid #ddd', cursor: hasChildren ? 'pointer' : 'default' }}
+                 onClick={() => hasChildren && toggleChildrenVisibility(node)}>
+              {node.name || 'Unnamed Node'}
+            </div>
+
             {isVendor && node.isExpanded && (
               <div className="special-node-details-row" style={{ marginLeft: `${level * 20 + 20}px` }}>
                 <div className="special-node-detail-cell">Name : {node.objectName || 'Not available'}</div>
@@ -191,6 +182,21 @@ function BasicTreeView() {
                 Click To Go Submission
               </div>
             )}
+
+
+            </div>
+            {/* Special */}
+            {isMasterIngredient && node.isExpanded && (
+              <div className="special-node-details-row">
+                <div className="special-node-detail-cell">Expiration Date: {node.expirationDate || 'Not available'}</div>
+                <div className="special-node-detail-cell">KID: {node.kid || 'Not available'}</div>
+                <div className="special-node-detail-cell">Passover: {node.passover !== null ? node.passover.toString() : 'Not available'}</div>
+                <div className="special-node-detail-cell">UID Info: {node.uidInfo || 'Not available'}</div>
+                <div className="special-node-detail-cell">UKD: {node.ukd || 'Not available'}</div>
+                <div className="special-node-detail-cell">DPM: {node.dpm || 'Not available'}</div>
+              </div>
+            )}
+           
             </div>
           {hasChildren && node.isExpanded && renderGridItems(node.children, level + 1)}
         </React.Fragment>
