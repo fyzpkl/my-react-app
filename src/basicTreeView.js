@@ -96,28 +96,21 @@ function BasicTreeView() {
 
     }
    };
-   {hoveredNode && (
-      <div style={{
-        position: 'absolute',
-        left: '100%', 
-        top: 0,
-        border: '1px solid black',
-        backgroundColor: 'white',
-        padding: '10px',
-        zIndex: 1000 
-      }}>
-        {/* Displaying the additional information */}
-        <p>{debugMessage}</p>
-        <p>Hovered Node Data: {JSON.stringify(hoveredNode)}</p> {/* Debugging line */}
-        <p>Name: {hoveredNode.objectName || 'N/A'}</p>
-        <p>Expiration Date: {hoveredNode.expirationDate ? hoveredNode.expirationDate.toString() : 'N/A'}</p>
-        <p>KID: {hoveredNode.kid || 'N/A'}</p>
-        <p>Passover: {hoveredNode.passover ? 'Yes' : 'No'}</p>
-        <p>UID Info: {hoveredNode.uidInfo || 'N/A'}</p>
-        <p>UKD: {hoveredNode.ukd || 'N/A'}</p>
-        <p>DPM: {hoveredNode.dpm || 'N/A'}</p>
-      </div>
-    )}
+   const handleAlert = (nodeData) => {
+    if (nodeData) {
+      // Prepare the debug message
+      const debugMessage = `Name: ${nodeData.objectName || 'N/A'}\n` +
+                           `Expiration Date: ${nodeData.expirationDate ? nodeData.expirationDate.toString() : 'N/A'}\n` +
+                           `KID: ${nodeData.kid || 'N/A'}\n` +
+                           `Passover: ${nodeData.passover ? 'Yes' : 'No'}\n` +
+                           `UID Info: ${nodeData.uidInfo || 'N/A'}\n` +
+                           `UKD: ${nodeData.ukd || 'N/A'}\n` +
+                           `DPM: ${nodeData.dpm || 'N/A'}`;
+  
+      // Display the debug message in an alert
+      alert(debugMessage);
+    }
+  };
   
   const renderGridItems = (nodes, level = 0) => {
     if (!nodes) return null;
@@ -168,7 +161,10 @@ function BasicTreeView() {
             <div 
               onMouseEnter={() => handleMouseEnter(node)}
               onMouseLeave={handleMouseLeave}
-              onClick={() => handleNodeClick(node.masterIngredientId, 'MasterIngredient__c')}
+              onClick={() => {
+                handleNodeClick(node.masterIngredientId, 'MasterIngredient__c'); // Call the first function
+                handleAlert(hoveredNode); // Call the second function
+              }}
               style={clickableStyle}>
               Master Ingredient: {node.masterIngredientName || 'No Master Ingredient'}
             </div>
