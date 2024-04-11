@@ -51,6 +51,7 @@ function BasicTreeView() {
   }, [apiResponse]);
 
   const handleMouseEnter = (node) => {
+    console.log('Mouse entered:', node);
     setDebugMessage(`Type: ${node.type || 'N/A'}`); // Set debug message with type information
     setHoveredNode(node);
   };
