@@ -100,7 +100,11 @@ function BasicTreeView() {
       if (!hasChildren) {
         backgroundColor = colorAdjustmentForNoChildren;
       }
-      const isSpecialType = node.type === 'Use Master Ingredient ID In Child' || node.type === 'Create Master Ingredient';
+      
+      const isVendor = node.type === 'Create Vendor';
+      const isBrand = node.type === 'Create Brand';
+      const isMasterIngredient = node.type === 'Use Master Ingredient ID In Child' || node.type === 'Create Master Ingredient';
+      const isCompanyIngredient = node.type === 'Create Company Ingredient';
       return (
         <React.Fragment key={nodeId}>
           <div style={{ 
@@ -117,7 +121,7 @@ function BasicTreeView() {
               {node.name || 'Unnamed Node'}
             </div>
             {/* S */}
-            {isSpecialType && node.isExpanded && (
+            {isMasterIngredient && node.isExpanded && (
               <div className="special-node-details-row" style={{ marginLeft: `${level * 20 + 20}px` }}>
                 <div className="special-node-detail-cell">Expiration Date: {node.expirationDate || 'Not available'}</div>
                 <div className="special-node-detail-cell">KID: {node.kid || 'Not available'}</div>
@@ -126,6 +130,21 @@ function BasicTreeView() {
                 <div className="special-node-detail-cell">UKD: {node.ukd || 'Not available'}</div>
                 <div className="special-node-detail-cell">DPM: {node.dpm || 'Not available'}</div>
               
+              </div>
+          )}
+            {isVendor && node.isExpanded && (
+              <div className="special-node-details-row" style={{ marginLeft: `${level * 20 + 20}px` }}>
+                <div className="special-node-detail-cell">Name : {node.objectName || 'Not available'}</div>
+              </div>
+          )}
+            {isBrand && node.isExpanded && (
+              <div className="special-node-details-row" style={{ marginLeft: `${level * 20 + 20}px` }}>
+                <div className="special-node-detail-cell">Name : {node.objectName || 'Not available'}</div>
+              </div>
+          )}
+              {isCompanyIngredient && node.isExpanded && (
+              <div className="special-node-details-row" style={{ marginLeft: `${level * 20 + 20}px` }}>
+                <div className="special-node-detail-cell">Name : {node.objectName || 'Not available'}</div>
               </div>
           )}
           {/* Agency Name */}
