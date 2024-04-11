@@ -125,7 +125,7 @@ function BasicTreeView() {
                 <div className="special-node-detail-cell">UID Info: {node.uidInfo || 'Not available'}</div>
                 <div className="special-node-detail-cell">UKD: {node.ukd || 'Not available'}</div>
                 <div className="special-node-detail-cell">DPM: {node.dpm || 'Not available'}</div>
-                <div className="special-node-detail-cell">Type: {node.type || 'Not available'}</div>
+              
               </div>
           )}
           {/* Agency Name */}
