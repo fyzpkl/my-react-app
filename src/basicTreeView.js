@@ -142,7 +142,7 @@ function BasicTreeView() {
                 <div className="special-node-detail-cell">Name : {node.objectName || 'Not available'}</div>
               </div>
           )}
-              {isCompanyIngredient && node.isExpanded && (
+              {isCompanyIngredient && (
               <div className="special-node-details-row" style={{ marginLeft: `${level * 20 + 20}px` }}>
                 <div className="special-node-detail-cell">Name : {node.objectName || 'Not available'}</div>
               </div>
