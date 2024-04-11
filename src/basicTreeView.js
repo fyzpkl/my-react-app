@@ -51,12 +51,23 @@ function BasicTreeView() {
   }, [apiResponse]);
 
   const handleMouseEnter = (node) => {
-    alert('Hover event triggered');
-    setDebugMessage('Hover event triggered');
-    console.log('Hovered over node:', node); // Add this for debugging
-    console.log(node);
+    if (node.type === 'Use Master Ingredient ID In Child' || node.type === 'Create Master Ingredient') {
+      setDebugMessage(`Name: ${node.objectName || 'N/A'}\n` +
+                     `Expiration Date: ${node.expirationDate ? node.expirationDate.toString() : 'N/A'}\n` +
+                     `KID: ${node.kid || 'N/A'}\n` +
+                     `Passover: ${node.passover ? 'Yes' : 'No'}\n` +
+                     `UID Info: ${node.uidInfo || 'N/A'}\n` +
+                     `UKD: ${node.ukd || 'N/A'}\n` +
+                     `DPM: ${node.dpm || 'N/A'}`);
+    } else {
+      setDebugMessage(''); // Clear the debug message if the node type doesn't match
+    }
+  
+    // Additionally, you can add any other actions you want to perform when hovering over a node
+    console.log('Hovered over node:', node);
     setHoveredNode(node);
   };
+  
 
   const handleMouseLeave = () => {
     setHoveredNode(null);
@@ -96,21 +107,6 @@ function BasicTreeView() {
 
     }
    };
-   const handleAlert = (nodeData) => {
-    if (nodeData) {
-      // Prepare the debug message
-      const debugMessage = `Name: ${nodeData.objectName || 'N/A'}\n` +
-                           `Expiration Date: ${nodeData.expirationDate ? nodeData.expirationDate.toString() : 'N/A'}\n` +
-                           `KID: ${nodeData.kid || 'N/A'}\n` +
-                           `Passover: ${nodeData.passover ? 'Yes' : 'No'}\n` +
-                           `UID Info: ${nodeData.uidInfo || 'N/A'}\n` +
-                           `UKD: ${nodeData.ukd || 'N/A'}\n` +
-                           `DPM: ${nodeData.dpm || 'N/A'}`;
-  
-      // Display the debug message in an alert
-      alert(debugMessage);
-    }
-  };
   
   const renderGridItems = (nodes, level = 0) => {
     if (!nodes) return null;
@@ -161,10 +157,7 @@ function BasicTreeView() {
             <div 
               onMouseEnter={() => handleMouseEnter(node)}
               onMouseLeave={handleMouseLeave}
-              onClick={() => {
-                handleNodeClick(node.masterIngredientId, 'MasterIngredient__c'); // Call the first function
-                handleAlert(hoveredNode); // Call the second function
-              }}
+              onClick={() => handleNodeClick(node.masterIngredientId, 'MasterIngredient__c')}
               style={clickableStyle}>
               Master Ingredient: {node.masterIngredientName || 'No Master Ingredient'}
             </div>
