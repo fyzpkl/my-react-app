@@ -121,12 +121,12 @@ function BasicTreeView() {
               {node.name || 'Unnamed Node'}
             </div>
 
-            {isVendor && node.isExpanded && (
+            {isVendor &&  (
               <div className="special-node-details-row" style={{ marginLeft: `${level * 20 + 20}px` }}>
                 <div className="special-node-detail-cell">Name : {node.objectName || 'Not available'}</div>
               </div>
           )}
-            {isBrand && node.isExpanded && (
+            {isBrand &&  (
               <div className="special-node-details-row" style={{ marginLeft: `${level * 20 + 20}px` }}>
                 <div className="special-node-detail-cell">Name : {node.objectName || 'Not available'}</div>
               </div>
