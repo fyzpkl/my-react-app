@@ -10,6 +10,7 @@ function BasicTreeView() {
   const [parsedResponse, setParsedResponse] = useState(null); // New state for parsed API response
   const [companyId, setCompanyId] = useState(null);
   const [handledById, setHandledById] = useState(null);
+  const [hoveredNode, setHoveredNode] = useState(null);
 
   useEffect(() => {
     const handleMessage = (event) => {
@@ -47,7 +48,13 @@ function BasicTreeView() {
         }
     }
   }, [apiResponse]);
+  const handleMouseEnter = (node) => {
+    setHoveredNode(node);
+  };
 
+  const handleMouseLeave = () => {
+    setHoveredNode(null);
+  };
   const handleNodeClick = (submissionId) => {
     const objectUrl = `${salesforceInstance}lightning/r/Submission_Group__c/${submissionId}/view`;
     window.open(objectUrl, '_blank');
@@ -83,6 +90,27 @@ function BasicTreeView() {
 
     }
    };
+   {hoveredNode && (
+      <div style={{
+        position: 'absolute',
+        left: '100%', // Adjust as needed for your layout
+        top: 0,
+        border: '1px solid black',
+        backgroundColor: 'white',
+        padding: '10px',
+        zIndex: 1000 // Ensure it's above other elements
+      }}>
+        {/* Displaying the additional information */}
+        <p>Name: {hoveredNode.objectName || 'N/A'}</p>
+        <p>Expiration Date: {hoveredNode.expirationDate ? hoveredNode.expirationDate.toString() : 'N/A'}</p>
+        <p>KID: {hoveredNode.kid || 'N/A'}</p>
+        <p>Passover: {hoveredNode.passover ? 'Yes' : 'No'}</p>
+        <p>UID Info: {hoveredNode.uidInfo || 'N/A'}</p>
+        <p>UKD: {hoveredNode.ukd || 'N/A'}</p>
+        <p>DPM: {hoveredNode.dpm || 'N/A'}</p>
+      </div>
+    )}
+  
   const renderGridItems = (nodes, level = 0) => {
     if (!nodes) return null;
 
@@ -112,12 +140,7 @@ function BasicTreeView() {
                  onClick={() => hasChildren && toggleChildrenVisibility(node)}>
               {node.name || 'Unnamed Node'}
             </div>
-            {/* Render Object_Name__c */}
-              {node.objectName && (
-                <div style={{ padding: '10px', borderRight: '1px solid #ddd' }}>
-                            Name : {node.objectName}
-                  </div>
-                )}
+
           {/* Agency Name */}
           {node.agencyId && (
             <div onClick={() => handleNodeClick(node.agencyId, 'Agency__c')} style={clickableStyle}>
@@ -134,7 +157,11 @@ function BasicTreeView() {
 
           {/* Master Ingredient Name */}
           {node.masterIngredientId && (
-            <div onClick={() => handleNodeClick(node.masterIngredientId, 'MasterIngredient__c')} style={clickableStyle}>
+            <div 
+              onMouseEnter={() => handleMouseEnter(node)}
+              onMouseLeave={handleMouseLeave}
+              onClick={() => handleNodeClick(node.masterIngredientId, 'MasterIngredient__c')}
+              style={clickableStyle}>
               Master Ingredient: {node.masterIngredientName || 'No Master Ingredient'}
             </div>
           )}
