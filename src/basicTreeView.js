@@ -51,28 +51,12 @@ function BasicTreeView() {
   }, [apiResponse]);
 
   const handleMouseEnter = (node) => {
-    console.log('Hovered over node:', node);
-  
-    if (node.type === 'Use Master Ingredient ID In Child' || node.type === 'Create Master Ingredient') {
-      console.log('Matching node type:', node.type);
-      setDebugMessage(`Name: ${node.objectName || 'N/A'}\n` +
-                     `Expiration Date: ${node.expirationDate ? node.expirationDate.toString() : 'N/A'}\n` +
-                     `KID: ${node.kid || 'N/A'}\n` +
-                     `Passover: ${node.passover ? 'Yes' : 'No'}\n` +
-                     `UID Info: ${node.uidInfo || 'N/A'}\n` +
-                     `UKD: ${node.ukd || 'N/A'}\n` +
-                     `DPM: ${node.dpm || 'N/A'}`);
-    } else {
-      console.log('Non-matching node type:', node.type);
-      setDebugMessage(''); // Clear the debug message if the node type doesn't match
-    }
-  
+    setDebugMessage(`Type: ${node.type || 'N/A'}`); // Set debug message with type information
     setHoveredNode(node);
   };
   
-  
-
   const handleMouseLeave = () => {
+    setDebugMessage(''); // Clear debug message when leaving the node
     setHoveredNode(null);
   };
   const handleNodeClick = (submissionId) => {
