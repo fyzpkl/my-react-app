@@ -231,7 +231,7 @@ function BasicTreeView() {
           </div>
         );
       }
-    }
+    
     
     // Return null if no specific type matches
     return null;
