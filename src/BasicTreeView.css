@@ -1,0 +1,49 @@
+/* BasicTreeView.css */
+.node-container {
+    padding: 10px;
+    border: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .node-details {
+    flex: 1;
+    padding: 10px;
+    border-right: 1px solid #ddd;
+    cursor: pointer;
+  }
+
+  .special-node-details {
+    margin-left: 20px;
+    background-color: #f5f5f5;
+    padding: 10px;
+    border: 1px solid #ddd;
+  }
+  
+  .clickable {
+    cursor: pointer;
+    color: #007bff; /* Softer blue color */
+    text-decoration: none; /* Remove underline */
+  }
+  
+  .table-style {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .th-style {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    border: 1px solid #ddd;
+  }
+  
+  .td-style {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+
+  

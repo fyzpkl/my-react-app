@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import './BasicTreeView.css';
 
 function BasicTreeView() {
   const [treeData, setTreeData] = useState(null);
@@ -117,16 +118,16 @@ function BasicTreeView() {
             </div>
             {/* S */}
             {isSpecialType && node.isExpanded && (
-                        <div style={{ marginLeft: `${level * 20 + 20}px`, backgroundColor: '#f5f5f5', padding: '10px', border: '1px solid #ddd' }}>
-                            <div>Expiration Date: {node.expirationDate || 'Not available'}</div>
-                            <div>KID: {node.kid || 'Not available'}</div>
-                            <div>Passover: {node.passover !== null ? node.passover.toString() : 'Not available'}</div>
-                            <div>UID Info: {node.uidInfo || 'Not available'}</div>
-                            <div>UKD: {node.ukd || 'Not available'}</div>
-                            <div>DPM: {node.dpm || 'Not available'}</div>
-                            <div>Type: {node.type || 'Not available'}</div>
-                        </div>
-                    )}
+              <div className="special-node-details-row" style={{ marginLeft: `${level * 20 + 20}px` }}>
+                <div className="special-node-detail-cell">Expiration Date: {node.expirationDate || 'Not available'}</div>
+                <div className="special-node-detail-cell">KID: {node.kid || 'Not available'}</div>
+                <div className="special-node-detail-cell">Passover: {node.passover !== null ? node.passover.toString() : 'Not available'}</div>
+                <div className="special-node-detail-cell">UID Info: {node.uidInfo || 'Not available'}</div>
+                <div className="special-node-detail-cell">UKD: {node.ukd || 'Not available'}</div>
+                <div className="special-node-detail-cell">DPM: {node.dpm || 'Not available'}</div>
+                <div className="special-node-detail-cell">Type: {node.type || 'Not available'}</div>
+              </div>
+          )}
           {/* Agency Name */}
           {node.agencyId && (
             <div onClick={() => handleNodeClick(node.agencyId, 'Agency__c')} style={clickableStyle}>
