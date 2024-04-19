@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './BasicTreeView.css';
-import Modal from './Modal'; // Import the modal component
+
 
 function BasicTreeView() {
   const [treeData, setTreeData] = useState(null);
