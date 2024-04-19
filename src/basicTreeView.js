@@ -178,6 +178,14 @@ function BasicTreeView() {
                 <div className="special-node-detail-cell">Name : {node.objectName || 'Not available'}</div>
               </div>
             )}
+             {/* Special */}
+             {isMasterIngredient && (
+              <div className="special-node-details-row">
+                  <button onClick={() => handleDetailClick(node)} className="info-button">
+                      Click for More Info
+                  </button>
+              </div>
+          )}
           {/* Agency Name */}
           {node.agencyId && (
             <div onClick={() => handleNodeClick(node.agencyId, 'Agency__c')} style={clickableStyle}>
@@ -220,14 +228,7 @@ function BasicTreeView() {
               </div>
             )}
             </div>
-            {/* Special */}
-            {isMasterIngredient &&  (
-            <div className="special-node-details-row">
-                <button onClick={() => handleDetailClick(node)}>
-                  Click for More Info
-                </button>
-            </div>
-            )}
+
            
             </div>
           {hasChildren && node.isExpanded && renderGridItems(node.children, level + 1)}
