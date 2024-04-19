@@ -83,7 +83,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;  // Make sure this is high enough to be on top
+    z-index: 1000; 
   }
   
   .modal-content {
@@ -91,7 +91,7 @@
     padding: 20px;
     border-radius: 8px;
     position: relative;
-    z-index: 1001;  // Ensures content is above overlay
+    z-index: 1001;  
   }
   
 
