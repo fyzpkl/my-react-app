@@ -182,8 +182,6 @@ function BasicTreeView() {
                 Click To Go Submission
               </div>
             )}
-
-
             </div>
             {/* Special */}
             {isMasterIngredient && node.isExpanded && (
