@@ -97,9 +97,10 @@ function BasicTreeView() {
     objectName: "Ingredient Name",
     expirationDate: "Expiration Date",
     dpm: "DPM",
-    // Add more mappings as needed
 };
-  const propertiesToShow = new Set(['Ukd', 'Uid', 'Kid','Passover','Ingredient Name','Expiration Date','DPM']); // Define properties to show
+
+// This should match the actual keys in your objects, not the display labels
+  const propertiesToShow = new Set(['ukd', 'uidInfo', 'kid', 'passover', 'objectName', 'expirationDate', 'dpm']);
 
   const renderObjectProperties = (obj) => {
       console.log(obj);
