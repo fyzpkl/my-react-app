@@ -95,6 +95,7 @@ function BasicTreeView() {
     ));
   };
   const handleDetailClick = (node) => {
+    console.log("Node data in detail click:", node); // This should log the node object
     const content = (
       <div>
         <h3>{node.name || 'Unnamed Node'}</h3>
@@ -205,10 +206,9 @@ function BasicTreeView() {
             {/* Special */}
             {isMasterIngredient &&  (
             <div className="special-node-details-row">
-              <button onClick={(event) => handleDetailClick(event, node)}
-                      style={{ padding: '5px 10px', cursor: 'pointer', backgroundColor: '#007bff', color: 'white' }}>
-                Click for More Info
-              </button>
+                <button onClick={() => handleDetailClick(node)}>
+                  Click for More Info
+                </button>
             </div>
             )}
            
