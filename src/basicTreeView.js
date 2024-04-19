@@ -88,14 +88,28 @@ function BasicTreeView() {
 
     }
    };
-   const renderObjectProperties = (obj) => {
-    console.log(obj);
-    return Object.entries(obj)
-        .filter(([key, value]) => value != null)  // Filter out entries where the value is null or undefined
-        .map(([key, value], index) => (
-            <p key={index}>{`${key}: ${value}`}</p>
-        ));
+   const keyLabels = {
+    ukd: "Ukd",
+    uidInfo: "Uid",
+    kid: "Kid",
+    type: "Type",
+    passover: "Passover",
+    objectName: "Ingredient Name",
+    expirationDate: "Expiration Date",
+    dpm: "DPM",
+    // Add more mappings as needed
 };
+  const propertiesToShow = new Set(['Ukd', 'Uid', 'Kid','Passover','Ingredient Name','Expiration Date','DPM']); // Define properties to show
+
+  const renderObjectProperties = (obj) => {
+      console.log(obj);
+      return Object.entries(obj)
+          .filter(([key, value]) => propertiesToShow.has(key)) // Filter to only include specified keys
+          .map(([key, value], index) => {
+              const label = keyLabels[key] || key; // Use friendly labels if available
+              return <p key={index}>{`${label}: ${value}`}</p>; // Render each property as a paragraph
+          });
+  };
   const handleDetailClick = (node) => {
     console.log("Node data in detail click:", node); // This should log the node object
     const content = (
