@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './BasicTreeView.css';
+import Modal from './Modal'; // Import the modal component
 
 function BasicTreeView() {
   const [treeData, setTreeData] = useState(null);
@@ -11,7 +12,8 @@ function BasicTreeView() {
   const [parsedResponse, setParsedResponse] = useState(null); // New state for parsed API response
   const [companyId, setCompanyId] = useState(null);
   const [handledById, setHandledById] = useState(null);
- 
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalContent, setModalContent] = useState(null);
 
   useEffect(() => {
     const handleMessage = (event) => {
@@ -86,7 +88,22 @@ function BasicTreeView() {
 
     }
    };
-
+   const handleDetailClick = (node, detailType) => {
+    const content = (
+      <div>
+        <h3>{node.name || 'Unnamed Node'}</h3>
+        {/* Populate with whatever detail is needed based on the node and detailType */}
+        <p>Detail Type: {detailType}</p>
+        {/* Example details */}
+        {node.expirationDate && <p>Expiration Date: {node.expirationDate || 'Not available'}</p>}
+        {node.kid && <p>KID: {node.kid || 'Not available'}</p>}
+        {/* More details can be added as needed */}
+      </div>
+    );
+    setModalContent(content);
+    setModalIsOpen(true);
+  };
+  
    const renderGridItems = (nodes, level = 0) => {
     if (!nodes) return null;
 
@@ -184,15 +201,13 @@ function BasicTreeView() {
             )}
             </div>
             {/* Special */}
-            {isMasterIngredient && node.isExpanded && (
-              <div className="special-node-details-row">
-                <div className="special-node-detail-cell">Expiration Date: {node.expirationDate || 'Not available'}</div>
-                <div className="special-node-detail-cell">KID: {node.kid || 'Not available'}</div>
-                <div className="special-node-detail-cell">Passover: {node.passover !== null ? node.passover.toString() : 'Not available'}</div>
-                <div className="special-node-detail-cell">UID Info: {node.uidInfo || 'Not available'}</div>
-                <div className="special-node-detail-cell">UKD: {node.ukd || 'Not available'}</div>
-                <div className="special-node-detail-cell">DPM: {node.dpm || 'Not available'}</div>
-              </div>
+            {isMasterIngredient &&  (
+            <div className="special-node-details-row">
+              <button onClick={(event) => handleDetailClick(event, node)}
+                      style={{ padding: '5px 10px', cursor: 'pointer', backgroundColor: '#007bff', color: 'white' }}>
+                Click for More Info
+              </button>
+            </div>
             )}
            
             </div>
