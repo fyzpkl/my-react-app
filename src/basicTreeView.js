@@ -90,10 +90,12 @@ function BasicTreeView() {
    };
    const renderObjectProperties = (obj) => {
     console.log(obj);
-    return Object.entries(obj).map(([key, value], index) => (
-      <p key={index}>{`${key}: ${value}`}</p>
-    ));
-  };
+    return Object.entries(obj)
+        .filter(([key, value]) => value != null)  // Filter out entries where the value is null or undefined
+        .map(([key, value], index) => (
+            <p key={index}>{`${key}: ${value}`}</p>
+        ));
+};
   const handleDetailClick = (node) => {
     console.log("Node data in detail click:", node); // This should log the node object
     const content = (
