@@ -88,19 +88,22 @@ function BasicTreeView() {
 
     }
    };
-   const handleDetailClick = (node, detailType) => {
-    console.log("Opening modal for node", node); // Debug: Check if this logs when expected
+   const renderObjectProperties = (obj) => {
+    return Object.entries(obj).map(([key, value], index) => (
+      <p key={index}>{`${key}: ${value}`}</p>
+    ));
+  };
+  const handleDetailClick = (node, detailType) => {
     const content = (
       <div>
         <h3>{node.name || 'Unnamed Node'}</h3>
-        <p>Detail Type: {detailType}</p>
-        {node.expirationDate && <p>Expiration Date: {node.expirationDate || 'Not available'}</p>}
-        {node.kid && <p>KID: {node.kid || 'Not available'}</p>}
+        {renderObjectProperties(node)}
       </div>
     );
     setModalContent(content);
     setModalIsOpen(true);
   };
+  
   
    const renderGridItems = (nodes, level = 0) => {
     if (!nodes) return null;
