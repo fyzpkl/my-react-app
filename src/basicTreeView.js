@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './BasicTreeView.css';
-
+import Modal  from './Modal'
 
 function BasicTreeView() {
   const [treeData, setTreeData] = useState(null);
@@ -89,15 +89,13 @@ function BasicTreeView() {
     }
    };
    const handleDetailClick = (node, detailType) => {
+    console.log("Opening modal for node", node); // Debug: Check if this logs when expected
     const content = (
       <div>
         <h3>{node.name || 'Unnamed Node'}</h3>
-        {/* Populate with whatever detail is needed based on the node and detailType */}
         <p>Detail Type: {detailType}</p>
-        {/* Example details */}
         {node.expirationDate && <p>Expiration Date: {node.expirationDate || 'Not available'}</p>}
         {node.kid && <p>KID: {node.kid || 'Not available'}</p>}
-        {/* More details can be added as needed */}
       </div>
     );
     setModalContent(content);
@@ -371,7 +369,9 @@ function BasicTreeView() {
           </button>
       )}
       {treeData ? renderGridItems(treeData.children) : <p>Loading submissions...</p>}
-
+      <Modal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)}>
+        {modalContent}
+      </Modal>
       {apiResponse && (
                 <div>
                 {renderUserFriendlyMessage()} {/* Render user-friendly message */}
