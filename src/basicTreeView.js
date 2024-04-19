@@ -89,11 +89,12 @@ function BasicTreeView() {
     }
    };
    const renderObjectProperties = (obj) => {
+    console.log(obj);
     return Object.entries(obj).map(([key, value], index) => (
       <p key={index}>{`${key}: ${value}`}</p>
     ));
   };
-  const handleDetailClick = (node, detailType) => {
+  const handleDetailClick = (node) => {
     const content = (
       <div>
         <h3>{node.name || 'Unnamed Node'}</h3>
@@ -373,7 +374,7 @@ function BasicTreeView() {
       )}
       {treeData ? renderGridItems(treeData.children) : <p>Loading submissions...</p>}
       <Modal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)}>
-        {modalContent}
+            {modalContent}
       </Modal>
       {apiResponse && (
                 <div>
