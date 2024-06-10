@@ -117,15 +117,24 @@ function BasicTreeView() {
     setModalIsOpen(true);
   };
 
+  const handleFlagClick = (node) => {
+    const content = (
+      <div>
+        <h3>Flag for {node.name || 'Unnamed Node'}</h3>
+        <p>{node.flag}</p>
+      </div>
+    );
+    setModalContent(content);
+    setModalIsOpen(true);
+  };
+
   const renderGridItems = (nodes, level = 0) => {
     if (!nodes) return null;
-
-    const sortedNodes = [...nodes].sort((a, b) => (b.flag ? 1 : 0) - (a.flag ? 1 : 0));
 
     const baseBackgroundColors = ['#f0f8ff', '#e6f2ff', '#cce0ff', '#b3cfff', '#99bfff'];
     const colorAdjustmentForNoChildren = '#ffe6e6';
 
-    return sortedNodes.map((node, index) => {
+    return nodes.map((node, index) => {
       const nodeId = `node-${index}`;
       const hasChildren = node.children && node.children.length > 0;
       let backgroundColor = baseBackgroundColors[level % baseBackgroundColors.length];
@@ -153,10 +162,6 @@ function BasicTreeView() {
                 onClick={() => hasChildren && toggleChildrenVisibility(node)}>
                 {node.name || 'Unnamed Node'}
               </div>
-
-              {node.flag && (
-                <div style={{ fontWeight: 'bold', color: 'red' }}>Flag: {node.flag}</div>
-              )}
 
               {isVendor && (
                 <div className="special-node-details-row" style={{ marginLeft: `${level * 20 + 20}px` }}>
@@ -291,6 +296,34 @@ function BasicTreeView() {
     textAlign: 'left',
   };
 
+  const renderFlags = (nodes) => {
+    const flaggedNodes = [];
+
+    const traverseNodes = (nodes) => {
+      nodes.forEach(node => {
+        if (node.flag) {
+          flaggedNodes.push(node);
+        }
+        if (node.children && node.children.length > 0) {
+          traverseNodes(node.children);
+        }
+      });
+    };
+
+    traverseNodes(nodes);
+
+    return flaggedNodes.length > 0 ? (
+      <div style={{ marginBottom: '20px' }}>
+        <h3>Flags</h3>
+        {flaggedNodes.map((node, index) => (
+          <div key={index} style={{ marginBottom: '10px', cursor: 'pointer', color: 'red' }} onClick={() => handleFlagClick(node)}>
+            {node.name || 'Unnamed Node'}: {node.flag}
+          </div>
+        ))}
+      </div>
+    ) : null;
+  };
+
   return (
     <div style={{ position: 'relative' }}>
       <h2>Group Submission</h2>
@@ -314,6 +347,7 @@ function BasicTreeView() {
           {isSubmitting ? 'Running...' : 'Run Submission Group'}
         </button>
       )}
+      {treeData && renderFlags(treeData.children)}
       {treeData ? renderGridItems(treeData.children) : <p>Loading submissions...</p>}
       <Modal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)}>
         {modalContent}
