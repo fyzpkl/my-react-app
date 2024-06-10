@@ -120,7 +120,7 @@ function BasicTreeView() {
   const renderGridItems = (nodes, level = 0) => {
     if (!nodes) return null;
 
-    const sortedNodes = [...nodes].sort((a, b) => (b.flag ? 1 : 0) - (a.flag ? 1 : 0)); // Move flagged items to top
+    const sortedNodes = [...nodes].sort((a, b) => (b.flag ? 1 : 0) - (a.flag ? 1 : 0));
 
     const baseBackgroundColors = ['#f0f8ff', '#e6f2ff', '#cce0ff', '#b3cfff', '#99bfff'];
     const colorAdjustmentForNoChildren = '#ffe6e6';
@@ -153,6 +153,10 @@ function BasicTreeView() {
                 onClick={() => hasChildren && toggleChildrenVisibility(node)}>
                 {node.name || 'Unnamed Node'}
               </div>
+
+              {node.flag && (
+                <div style={{ fontWeight: 'bold', color: 'red' }}>Flag: {node.flag}</div>
+              )}
 
               {isVendor && (
                 <div className="special-node-details-row" style={{ marginLeft: `${level * 20 + 20}px` }}>
