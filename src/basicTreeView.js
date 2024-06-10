@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './BasicTreeView.css';
-import Modal  from './Modal'
+import Modal from './Modal';
 
 function BasicTreeView() {
   const [treeData, setTreeData] = useState(null);
@@ -9,7 +9,7 @@ function BasicTreeView() {
   const [buttonClicked, setButtonClicked] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [apiResponse, setApiResponse] = useState(null);
-  const [parsedResponse, setParsedResponse] = useState(null); // New state for parsed API response
+  const [parsedResponse, setParsedResponse] = useState(null);
   const [companyId, setCompanyId] = useState(null);
   const [handledById, setHandledById] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -23,14 +23,13 @@ function BasicTreeView() {
         return;
       }
 
-    if (event.data && event.data.source === 'SalesforceLWC') {
-
+      if (event.data && event.data.source === 'SalesforceLWC') {
         const data = typeof event.data.treeData === 'string' ? JSON.parse(event.data.treeData) : event.data.treeData;
         setTreeData(data);
-        setSelectedSubmissionGroupId(data.groupId); 
-        setCompanyId(event.data.companyId); 
+        setSelectedSubmissionGroupId(data.groupId);
+        setCompanyId(event.data.companyId);
         setHandledById(event.data.currentUserId);
-    }
+      }
     };
 
     window.addEventListener('message', handleMessage);
@@ -39,19 +38,16 @@ function BasicTreeView() {
 
   useEffect(() => {
     if (apiResponse) {
-        try {
-            // Parse the response and extract "Created Objects"
-            const data = JSON.parse(apiResponse);
-            const createdObjects = data["Created Objects"] ? JSON.parse(data["Created Objects"]) : null;
-            setParsedResponse({ ...data, createdObjects });
-        } catch (error) {
-            // Handle any parsing errors
-            console.error('Error parsing API response:', error);
-            setParsedResponse(null);
-        }
+      try {
+        const data = JSON.parse(apiResponse);
+        const createdObjects = data["Created Objects"] ? JSON.parse(data["Created Objects"]) : null;
+        setParsedResponse({ ...data, createdObjects });
+      } catch (error) {
+        console.error('Error parsing API response:', error);
+        setParsedResponse(null);
+      }
     }
   }, [apiResponse]);
-
 
   const handleNodeClick = (submissionId) => {
     const objectUrl = `${salesforceInstance}lightning/r/Submission_Group__c/${submissionId}/view`;
@@ -65,10 +61,10 @@ function BasicTreeView() {
 
   const handleRunSubmission = async (submissionGroupId) => {
     setIsSubmitting(true);
-    
+
     const requestBody = {
       "submission_group": submissionGroupId,
-      "handled_by": handledById, 
+      "handled_by": handledById,
       "company_id": companyId
     };
     try {
@@ -81,14 +77,14 @@ function BasicTreeView() {
       setApiResponse(JSON.stringify(data, null, 2));
     } catch (error) {
       console.error('Error running submission:', error);
-      setApiResponse('Error: Could not complete submission'); 
+      setApiResponse('Error: Could not complete submission');
     } finally {
       setIsSubmitting(false);
       setButtonClicked(true);
-
     }
-   };
-   const keyLabels = {
+  };
+
+  const keyLabels = {
     ukd: "Ukd",
     uidInfo: "Uid",
     kid: "Kid",
@@ -97,22 +93,20 @@ function BasicTreeView() {
     objectName: "Ingredient Name",
     expirationDate: "Expiration Date",
     dpm: "DPM",
-};
+  };
 
-// This should match the actual keys in your objects, not the display labels
   const propertiesToShow = new Set(['ukd', 'uidInfo', 'kid', 'passover', 'objectName', 'expirationDate', 'dpm']);
 
   const renderObjectProperties = (obj) => {
-      console.log(obj);
-      return Object.entries(obj)
-          .filter(([key, value]) => propertiesToShow.has(key)) // Filter to only include specified keys
-          .map(([key, value], index) => {
-              const label = keyLabels[key] || key; // Use friendly labels if available
-              return <p key={index}>{`${label}: ${value}`}</p>; // Render each property as a paragraph
-          });
+    return Object.entries(obj)
+      .filter(([key, value]) => propertiesToShow.has(key))
+      .map(([key, value], index) => {
+        const label = keyLabels[key] || key;
+        return <p key={index}>{`${label}: ${value}`}</p>;
+      });
   };
+
   const handleDetailClick = (node) => {
-    console.log("Node data in detail click:", node); // This should log the node object
     const content = (
       <div>
         <h3>{node.name || 'Unnamed Node'}</h3>
@@ -122,232 +116,158 @@ function BasicTreeView() {
     setModalContent(content);
     setModalIsOpen(true);
   };
-  
-  
-   const renderGridItems = (nodes, level = 0) => {
+
+  const renderGridItems = (nodes, level = 0) => {
     if (!nodes) return null;
+
+    const sortedNodes = [...nodes].sort((a, b) => (b.flag ? 1 : 0) - (a.flag ? 1 : 0)); // Move flagged items to top
 
     const baseBackgroundColors = ['#f0f8ff', '#e6f2ff', '#cce0ff', '#b3cfff', '#99bfff'];
     const colorAdjustmentForNoChildren = '#ffe6e6';
 
-    return nodes.map((node, index) => {
+    return sortedNodes.map((node, index) => {
       const nodeId = `node-${index}`;
       const hasChildren = node.children && node.children.length > 0;
       let backgroundColor = baseBackgroundColors[level % baseBackgroundColors.length];
       if (!hasChildren) {
         backgroundColor = colorAdjustmentForNoChildren;
       }
-      
+
       const isVendor = node.type === 'Create Vendor';
       const isBrand = node.type === 'Create Brand';
       const isMasterIngredient = node.type === 'Use Master Ingredient ID In Child' || node.type === 'Create Master Ingredient';
       const isCompanyIngredient = node.type === 'Create Company Ingredient';
       const isGroup = node.type === 'Create Group';
+
       return (
         <React.Fragment key={nodeId}>
-          <div style={{ 
-            padding: '10px', 
-            border: '1px solid #ddd', 
-            flexDirection: 'column',  // Ensure vertical layout
-            marginLeft: `${level * 20}px`, 
-            backgroundColor 
+          <div style={{
+            padding: '10px',
+            border: '1px solid #ddd',
+            flexDirection: 'column',
+            marginLeft: `${level * 20}px`,
+            backgroundColor
           }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div style={{ flex: 1, padding: '10px', borderRight: '1px solid #ddd', cursor: hasChildren ? 'pointer' : 'default' }}
-                 onClick={() => hasChildren && toggleChildrenVisibility(node)}>
-              {node.name || 'Unnamed Node'}
-            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ flex: 1, padding: '10px', borderRight: '1px solid #ddd', cursor: hasChildren ? 'pointer' : 'default' }}
+                onClick={() => hasChildren && toggleChildrenVisibility(node)}>
+                {node.name || 'Unnamed Node'}
+              </div>
 
-            {isVendor &&  (
-              <div className="special-node-details-row" style={{ marginLeft: `${level * 20 + 20}px` }}>
-                <div className="special-node-detail-cell">Name : {node.objectName || 'Not available'}</div>
-              </div>
-          )}
-            {isBrand &&  (
-              <div className="special-node-details-row" style={{ marginLeft: `${level * 20 + 20}px` }}>
-                <div className="special-node-detail-cell">Name : {node.objectName || 'Not available'}</div>
-              </div>
-          )}
+              {isVendor && (
+                <div className="special-node-details-row" style={{ marginLeft: `${level * 20 + 20}px` }}>
+                  <div className="special-node-detail-cell">Name : {node.objectName || 'Not available'}</div>
+                </div>
+              )}
+              {isBrand && (
+                <div className="special-node-details-row" style={{ marginLeft: `${level * 20 + 20}px` }}>
+                  <div className="special-node-detail-cell">Name : {node.objectName || 'Not available'}</div>
+                </div>
+              )}
               {isCompanyIngredient && (
-              <div className="special-node-details-row" style={{ marginLeft: `${level * 20 + 20}px` }}>
-                <div className="special-node-detail-cell">Name : {node.objectName || 'Not available'}</div>
-              </div>
-          )}
-            {isGroup && (
-              <div className="special-node-details-row" style={{ marginLeft: `${level * 20 + 20}px` }}>
-                <div className="special-node-detail-cell">Name : {node.objectName || 'Not available'}</div>
-              </div>
-            )}
-             {/* Special */}
-             {isMasterIngredient && (
-              <div className="special-node-details-row">
+                <div className="special-node-details-row" style={{ marginLeft: `${level * 20 + 20}px` }}>
+                  <div className="special-node-detail-cell">Name : {node.objectName || 'Not available'}</div>
+                </div>
+              )}
+              {isGroup && (
+                <div className="special-node-details-row" style={{ marginLeft: `${level * 20 + 20}px` }}>
+                  <div className="special-node-detail-cell">Name : {node.objectName || 'Not available'}</div>
+                </div>
+              )}
+              {isMasterIngredient && (
+                <div className="special-node-details-row">
                   <button onClick={() => handleDetailClick(node)} className="info-button">
-                      Click for More Info
+                    Click for More Info
                   </button>
-              </div>
-          )}
-          {/* Agency Name */}
-          {node.agencyId && (
-            <div onClick={() => handleNodeClick(node.agencyId, 'Agency__c')} style={clickableStyle}>
-              Agency Name: {node.agencyName || 'No Agency'}
+                </div>
+              )}
+              {node.agencyId && (
+                <div onClick={() => handleNodeClick(node.agencyId, 'Agency__c')} style={clickableStyle}>
+                  Agency Name: {node.agencyName || 'No Agency'}
+                </div>
+              )}
+              {node.brandId && (
+                <div onClick={() => handleNodeClick(node.brandId, 'Brand__c')} style={clickableStyle}>
+                  Brand Name: {node.brandName || 'No Brand'}
+                </div>
+              )}
+              {node.masterIngredientId && (
+                <div onClick={() => handleNodeClick(node.masterIngredientId, 'MasterIngredient__c')} style={clickableStyle}>
+                  Master Ingredient: {node.masterIngredientName || 'No Master Ingredient'}
+                </div>
+              )}
+              {node.companyIngredientId && (
+                <div onClick={() => handleNodeClick(node.companyIngredientId, 'CompanyIngredient__c')} style={clickableStyle}>
+                  Company Ingredient: {node.companyIngredientName || 'No Company Ingredient'}
+                </div>
+              )}
+              {node.vendorId && (
+                <div onClick={() => handleNodeClick(node.vendorId, 'Vendor__c')} style={clickableStyle}>
+                  Vendor Name: {node.vendorName || 'No Vendor'}
+                </div>
+              )}
+              {node.submissionId && (
+                <div onClick={() => handleNodeClick(node.submissionId)} style={clickableStyle}>
+                  Click To Go Submission
+                </div>
+              )}
             </div>
-          )}
-
-          {/* Brand Name */}
-          {node.brandId && (
-            <div onClick={() => handleNodeClick(node.brandId, 'Brand__c')} style={clickableStyle}>
-              Brand Name: {node.brandName || 'No Brand'}
-            </div>
-          )}
-
-          {/* Master Ingredient Name */}
-          {node.masterIngredientId && (
-            <div 
-              onClick={() => handleNodeClick(node.masterIngredientId, 'MasterIngredient__c')}
-              style={clickableStyle}>
-              Master Ingredient: {node.masterIngredientName || 'No Master Ingredient'}
-            </div>
-          )}
-
-          {/* Company Ingredient Name */}
-          {node.companyIngredientId && (
-            <div onClick={() => handleNodeClick(node.companyIngredientId, 'CompanyIngredient__c')} style={clickableStyle}>
-              Company Ingredient: {node.companyIngredientName || 'No Company Ingredient'}
-            </div>
-          )}
-
-          {/* Vendor Name */}
-          {node.vendorId && (
-            <div onClick={() => handleNodeClick(node.vendorId, 'Vendor__c')} style={clickableStyle}>
-              Vendor Name: {node.vendorName || 'No Vendor'}
-            </div>
-          )}
-            {node.submissionId && (
-              <div onClick={() => handleNodeClick(node.submissionId)} style={clickableStyle}>
-                Click To Go Submission
-              </div>
-            )}
-            </div>
-
-           
-            </div>
+          </div>
           {hasChildren && node.isExpanded && renderGridItems(node.children, level + 1)}
         </React.Fragment>
       );
     });
   };
-  // function renderNodeTypeSpecificDetails(node, level) {
-  //   const marginLeftStyle = { marginLeft: `${level * 20 + 20}px` };
-  
-  //   if (node.type === 'Use Master Ingredient ID In Child' || node.type === 'Create Master Ingredient') {
-  //     return (
-  //       <div className="special-node-details-row" style={marginLeftStyle}>
-  //         <div className="special-node-detail-cell">Expiration Date: {node.expirationDate || 'Not available'}</div>
-  //         <div className="special-node-detail-cell">KID: {node.kid || 'Not available'}</div>
-  //         <div className="special-node-detail-cell">Passover: {node.passover !== null ? node.passover.toString() : 'Not available'}</div>
-  //         <div className="special-node-details-row" style={marginLeftStyle}></div>
-  //         <div className="special-node-detail-cell">UID Info: {node.uidInfo || 'Not available'}</div>
-  //         <div className="special-node-detail-cell">UKD: {node.ukd || 'Not available'}</div>
-  //         <div className="special-node-detail-cell">DPM: {node.dpm || 'Not available'}</div>
-  //         </div>
-  //     );
-  //   } else if (node.type === 'Create Vendor' || node.type === 'Create Brand' || node.type === 'Create Company Ingredient' || node.type === 'Create Group') {
-  //     return (
-  //       <div className="special-node-details-row" style={marginLeftStyle}>
-  //         <div className="special-node-detail-cell">Name: {node.objectName || 'Not available'}</div>
-  //       </div>
-  //     );
-  //   }
-  //     else if (node.type === 'Create Vendor') {
-  //       return (
-  //         <div className="special-node-details-row" style={marginLeftStyle}>
-  //           <div className="special-node-detail-cell">Vendor Name: {node.objectName || 'Not available'}</div>
-  //           {/* Add other vendor-specific details if necessary */}
-  //         </div>
-  //       );
-  //     }
-    
-  //     // Render for 'Create Brand'
-  //     else if (node.type === 'Create Brand') {
-  //       return (
-  //         <div className="special-node-details-row" style={marginLeftStyle}>
-  //           <div className="special-node-detail-cell">Brand Name: {node.objectName || 'Not available'}</div>
-  //           {/* Add other brand-specific details if necessary */}
-  //         </div>
-  //       );
-  //     }
-    
-  //     // Render for 'Create Company Ingredient'
-  //     else if (node.type === 'Create Company Ingredient') {
-  //       return (
-  //         <div className="special-node-details-row" style={marginLeftStyle}>
-  //           <div className="special-node-detail-cell">Company Ingredient: {node.objectName || 'Not available'}</div>
-  //           {/* Add other company ingredient-specific details if necessary */}
-  //         </div>
-  //       );
-  //     }
-    
-  //     // Render for 'Create Group'
-  //     else if (node.type === 'Create Group') {
-  //       return (
-  //         <div className="special-node-details-row" style={marginLeftStyle}>
-  //           <div className="special-node-detail-cell">Group Name: {node.objectName || 'Not available'}</div>
-  //           {/* Add other group-specific details if necessary */}
-  //         </div>
-  //       );
-  //     }
-    
-    
-  //   // Return null if no specific type matches
-  //   return null;
-  // }
+
   const renderApiResponseTable = () => {
     if (!parsedResponse || !parsedResponse.createdObjects) {
-        return null;
+      return null;
     }
     return (
       <table style={tableStyle}>
-          <thead>
-              <tr>
-                  <th style={thStyle}>Object Name</th>
-              </tr>
-          </thead>
-          <tbody>
-              {parsedResponse.createdObjects.map((obj, index) => (
-                  <tr key={index} style={{ backgroundColor: index % 2 === 0 ? '#f9f9f9' : 'white' }}>
-                      <td style={tdStyle}>
-                        <a href={`${salesforceInstance}lightning/r/${obj.objectType}/${obj.objectId}/view`} 
-                           target="_blank" 
-                           style={clickableStyle}>
-                          {obj.objectName || "Unnamed Object"}
-                        </a>
-                      </td>
-                  </tr>
-              ))}
-          </tbody>
-        </table>
+        <thead>
+          <tr>
+            <th style={thStyle}>Object Name</th>
+          </tr>
+        </thead>
+        <tbody>
+          {parsedResponse.createdObjects.map((obj, index) => (
+            <tr key={index} style={{ backgroundColor: index % 2 === 0 ? '#f9f9f9' : 'white' }}>
+              <td style={tdStyle}>
+                <a href={`${salesforceInstance}lightning/r/${obj.objectType}/${obj.objectId}/view`}
+                  target="_blank"
+                  style={clickableStyle}>
+                  {obj.objectName || "Unnamed Object"}
+                </a>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     );
   };
+
   const renderUserFriendlyMessage = () => {
     if (!parsedResponse) return null;
 
     if (parsedResponse.status === "Success") {
-        return <h3>Successfull - Created Objects</h3>;
+      return <h3>Successfully Created Objects</h3>;
     } else if (parsedResponse.status === "Error" || parsedResponse.error) {
-        // Assuming an error field for demonstration
-        return <h3 style={{ color: 'red' }}>Error: {parsedResponse.errorMessage}</h3>;
+      return <h3 style={{ color: 'red' }}>Error: {parsedResponse.errorMessage}</h3>;
     } else {
-        return <h3>Operation Status: {parsedResponse.status}</h3>;
+      return <h3>Operation Status: {parsedResponse.status}</h3>;
     }
-};
+  };
+
   const clickableStyle = {
     flex: 1,
     padding: '10px',
     borderRight: '1px solid #ddd',
     cursor: 'pointer',
-    color: '#007bff', // Softer blue color
-    textDecoration: 'none' // Remove underline
+    color: '#007bff',
+    textDecoration: 'none'
   };
+
   const tableStyle = {
     width: '100%',
     borderCollapse: 'collapse',
@@ -355,54 +275,53 @@ function BasicTreeView() {
   };
 
   const thStyle = {
-      backgroundColor: '#4CAF50',
-      color: 'white',
-      padding: '10px',
-      border: '1px solid #ddd',
+    backgroundColor: '#4CAF50',
+    color: 'white',
+    padding: '10px',
+    border: '1px solid #ddd',
   };
 
   const tdStyle = {
-      padding: '8px',
-      border: '1px solid #ddd',
-      textAlign: 'left',
+    padding: '8px',
+    border: '1px solid #ddd',
+    textAlign: 'left',
   };
 
   return (
-  <div style={{ position: 'relative' }}>
+    <div style={{ position: 'relative' }}>
       <h2>Group Submission</h2>
       {!buttonClicked && (
-          <button
-              onClick={() => handleRunSubmission(selectedSubmissionGroupId)}
-              disabled={isSubmitting}
-              style={{
-                  position: 'absolute',
-                  top: 0,
-                  right: 0,
-                  padding: '10px 20px',
-                  backgroundColor: '#4CAF50', // Green background
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '5px',
-                  cursor: isSubmitting ? 'default' : 'pointer',
-                  fontSize: '16px'
-              }}
-          >
-              {isSubmitting ? 'Running...' : 'Run Submission Group'}
-          </button>
+        <button
+          onClick={() => handleRunSubmission(selectedSubmissionGroupId)}
+          disabled={isSubmitting}
+          style={{
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            padding: '10px 20px',
+            backgroundColor: '#4CAF50',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: isSubmitting ? 'default' : 'pointer',
+            fontSize: '16px'
+          }}
+        >
+          {isSubmitting ? 'Running...' : 'Run Submission Group'}
+        </button>
       )}
       {treeData ? renderGridItems(treeData.children) : <p>Loading submissions...</p>}
       <Modal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)}>
-            {modalContent}
+        {modalContent}
       </Modal>
       {apiResponse && (
-                <div>
-                {renderUserFriendlyMessage()} {/* Render user-friendly message */}
-                <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}></pre>
-                {renderApiResponseTable()} {/* Render the API response table */}
-            </div>
-            
+        <div>
+          {renderUserFriendlyMessage()}
+          <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}></pre>
+          {renderApiResponseTable()}
+        </div>
       )}
-  </div>
+    </div>
   );
 }
 
