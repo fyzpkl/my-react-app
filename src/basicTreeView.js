@@ -316,9 +316,21 @@ function BasicTreeView() {
       <div style={{ marginBottom: '20px' }}>
         <h3>Flags</h3>
         {flaggedNodes.map((node, index) => (
-          <div key={index} style={{ marginBottom: '10px', cursor: 'pointer', color: 'red' }} onClick={() => handleFlagClick(node)}>
+          <button
+            key={index}
+            style={{
+              marginBottom: '10px',
+              cursor: 'pointer',
+              backgroundColor: 'red',
+              color: 'white',
+              border: 'none',
+              padding: '10px',
+              borderRadius: '5px'
+            }}
+            onClick={() => handleFlagClick(node)}
+          >
             {node.name || 'Unnamed Node'}: {node.flag}
-          </div>
+          </button>
         ))}
       </div>
     ) : null;
