@@ -117,11 +117,26 @@ function BasicTreeView() {
     setModalIsOpen(true);
   };
 
-  const handleFlagClick = (node) => {
+  const handleFlagClick = (flaggedNodes) => {
     const content = (
       <div>
-        <h3>Flag for {node.name || 'Unnamed Node'}</h3>
-        <p>{node.flag}</p>
+        <h3>Flagged Items</h3>
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr>
+              <th style={{ border: '1px solid #ddd', padding: '8px', backgroundColor: '#f4f4f4' }}>Name</th>
+              <th style={{ border: '1px solid #ddd', padding: '8px', backgroundColor: '#f4f4f4' }}>Flag</th>
+            </tr>
+          </thead>
+          <tbody>
+            {flaggedNodes.map((node, index) => (
+              <tr key={index}>
+                <td style={{ border: '1px solid #ddd', padding: '8px' }}>{node.name || 'Unnamed Node'}</td>
+                <td style={{ border: '1px solid #ddd', padding: '8px' }}>{node.flag}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     );
     setModalContent(content);
@@ -296,7 +311,7 @@ function BasicTreeView() {
     textAlign: 'left',
   };
 
-  const renderFlags = (nodes) => {
+  const getFlaggedNodes = (nodes) => {
     const flaggedNodes = [];
 
     const traverseNodes = (nodes) => {
@@ -311,29 +326,7 @@ function BasicTreeView() {
     };
 
     traverseNodes(nodes);
-
-    return flaggedNodes.length > 0 ? (
-      <div style={{ marginBottom: '20px' }}>
-        <h3>Flags</h3>
-        {flaggedNodes.map((node, index) => (
-          <button
-            key={index}
-            style={{
-              marginBottom: '10px',
-              cursor: 'pointer',
-              backgroundColor: 'red',
-              color: 'white',
-              border: 'none',
-              padding: '10px',
-              borderRadius: '5px'
-            }}
-            onClick={() => handleFlagClick(node)}
-          >
-            {node.name || 'Unnamed Node'}: {node.flag}
-          </button>
-        ))}
-      </div>
-    ) : null;
+    return flaggedNodes;
   };
 
   return (
@@ -359,7 +352,24 @@ function BasicTreeView() {
           {isSubmitting ? 'Running...' : 'Run Submission Group'}
         </button>
       )}
-      {treeData && renderFlags(treeData.children)}
+      {treeData && (
+        <div style={{ marginBottom: '20px' }}>
+          <button
+            onClick={() => handleFlagClick(getFlaggedNodes(treeData.children))}
+            style={{
+              cursor: 'pointer',
+              backgroundColor: 'red',
+              color: 'white',
+              border: 'none',
+              padding: '10px',
+              borderRadius: '5px',
+              fontSize: '16px'
+            }}
+          >
+            View All Flags
+          </button>
+        </div>
+      )}
       {treeData ? renderGridItems(treeData.children) : <p>Loading submissions...</p>}
       <Modal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)}>
         {modalContent}
