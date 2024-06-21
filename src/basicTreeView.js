@@ -143,6 +143,17 @@ function BasicTreeView() {
     setModalIsOpen(true);
   };
 
+  const handleSpecificFlagClick = (node) => {
+    const content = (
+      <div>
+        <h3>Flag Details</h3>
+        <p>{node.flag}</p>
+      </div>
+    );
+    setModalContent(content);
+    setModalIsOpen(true);
+  };
+
   const renderGridItems = (nodes, level = 0) => {
     if (!nodes) return null;
 
@@ -177,7 +188,11 @@ function BasicTreeView() {
                 onClick={() => hasChildren && toggleChildrenVisibility(node)}>
                 {node.name || 'Unnamed Node'}
               </div>
-
+              {node.flag && (
+                <div onClick={() => handleSpecificFlagClick(node)} style={clickableStyle}>
+                  <span role="img" aria-label="flag">❗</span>
+                </div>
+              )}
               {isVendor && (
                 <div className="special-node-details-row" style={{ marginLeft: `${level * 20 + 20}px` }}>
                   <div className="special-node-detail-cell">Name : {node.objectName || 'Not available'}</div>
