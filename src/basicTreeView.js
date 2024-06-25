@@ -267,6 +267,9 @@ function BasicTreeView() {
         <thead>
           <tr>
             <th style={thStyle}>Object Name</th>
+            <th style={thStyle}>Object Type</th>
+            <th style={thStyle}>Action Type</th>
+            <th style={thStyle}>Vendor ID</th>
           </tr>
         </thead>
         <tbody>
@@ -279,12 +282,16 @@ function BasicTreeView() {
                   {obj.objectName || "Unnamed Object"}
                 </a>
               </td>
+              <td style={tdStyle}>{obj.objectType}</td>
+              <td style={tdStyle}>{obj.actionType}</td>
+              <td style={tdStyle}>{obj.vendorId || "N/A"}</td>
             </tr>
           ))}
         </tbody>
       </table>
     );
   };
+  
 
   const renderUserFriendlyMessage = () => {
     if (!parsedResponse) return null;
