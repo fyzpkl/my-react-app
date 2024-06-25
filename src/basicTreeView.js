@@ -351,6 +351,8 @@ function BasicTreeView() {
     return flaggedNodes;
   };
 
+  const flaggedNodes = treeData ? getFlaggedNodes(treeData.children) : [];
+
   return (
     <div style={{ position: 'relative' }}>
       <h2>Group Submission</h2>
@@ -374,10 +376,10 @@ function BasicTreeView() {
           {isSubmitting ? 'Running...' : 'Run Submission Group'}
         </button>
       )}
-      {treeData && (
+      {treeData && flaggedNodes.length > 0 && (
         <div style={{ marginBottom: '20px' }}>
           <button
-            onClick={() => handleFlagClick(getFlaggedNodes(treeData.children))}
+            onClick={() => handleFlagClick(flaggedNodes)}
             style={{
               cursor: 'pointer',
               backgroundColor: 'red',
